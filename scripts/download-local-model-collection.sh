@@ -3,13 +3,13 @@
 set -uo pipefail
 
 MODELS_ROOT="$HOME/models"
-ROOT="$MODELS_ROOT/model-collection"
+ROOT="$MODELS_ROOT"
 VENV="$HOME/.venvs/hf-model-downloader"
 HF="$VENV/bin/hf"
 LOCK="$HOME/.model-collection-download.lock"
 LOG="$HOME/model-downloads-validated.log"
 PIDFILE="$HOME/model-downloads-validated.pid"
-STATUS="$ROOT/DOWNLOAD-STATUS.txt"
+STATUS="$ROOT/MODEL-COLLECTION-DOWNLOAD-STATUS.txt"
 SCRIPT_PATH="$(readlink -f "$0")"
 
 if [[ "${1:-}" != "--worker" ]]; then
@@ -123,9 +123,11 @@ EXPECTED_BYTES=(
 )
 
 find_existing_elsewhere() {
-    local filename="$1" min_bytes="$2" min_mib
+    local filename="$1" min_bytes="$2" exclude_target="$3" min_mib
     min_mib=$((min_bytes / 1048576))
-    find "$MODELS_ROOT" -path "$ROOT" -prune -o \
+    find "$MODELS_ROOT" \
+        -path "$MODELS_ROOT/model-collection" -prune -o \
+        -path "$exclude_target" -prune -o \
         -type f -name "$filename" -size "+${min_mib}M" -print -quit 2>/dev/null
 }
 is_valid() {
@@ -139,7 +141,7 @@ NEEDED=0
 for i in "${!FILES[@]}"; do
     target="$ROOT/${FOLDERS[$i]}/${FILES[$i]}"
     if is_valid "$target" "${MIN_BYTES[$i]}"; then continue; fi
-    existing="$(find_existing_elsewhere "${FILES[$i]}" "${MIN_BYTES[$i]}")"
+    existing="$(find_existing_elsewhere "${FILES[$i]}" "${MIN_BYTES[$i]}" "$target")"
     if [[ -n "$existing" ]]; then continue; fi
     current=0
     [[ -f "$target" ]] && current="$(stat -c%s "$target" 2>/dev/null || echo 0)"
@@ -175,7 +177,7 @@ download_one() {
         SKIPPED=$((SKIPPED + 1))
         return 0
     fi
-    existing="$(find_existing_elsewhere "$filename" "$min_bytes")"
+    existing="$(find_existing_elsewhere "$filename" "$min_bytes" "$target")"
     if [[ -n "$existing" ]]; then
         rm -f "$target"
         ln -s "$existing" "$target"
