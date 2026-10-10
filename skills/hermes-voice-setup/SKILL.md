@@ -63,3 +63,11 @@ Record three separate outcomes:
 3. A TTS provider actually speaks the response.
 
 Report each as PASS/FAIL/NOT TESTED. Never claim full voice integration after checking only STT inside Unsloth.
+
+
+## First live conversation checklist
+
+Follow the maintained checklist before declaring voice ready:
+https://github.com/convergentaru/hermes-local-model-docs/blob/main/docs/voice/hermes-desktop-first-voice-test.md
+
+Launch Desktop in the project folder with `hermes desktop --cwd "$HOME/robot-factory-os"` when it is not already open. Verify the exact active Unsloth model and text response first. Then configure Chained, local Whisper STT, Russian language and transcript confirmation. Test TTS separately and disclose any cloud provider before enabling it. Keep the currently working provider and API key unchanged.
