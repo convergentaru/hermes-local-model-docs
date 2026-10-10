@@ -27,6 +27,9 @@ https://github.com/convergentaru/hermes-local-model-docs/blob/main/docs/robot-fa
 
 ## Operating procedure
 
+- When the `screenpipe-hermes-memory` skill/MCP is installed and Screenpipe is actively capturing, use it as the local activity memory: search prior screen context, OCR/accessibility text, and timestamps to resume tasks. If disconnected or empty, verify capture freshness instead of claiming there is no history. Respect Screenpipe privacy filters and never search for secrets unless the user explicitly asks for a specific item.
+
+
 1. Inspect available tools and relevant existing project notes. For simple information retrieval, use built-in `web_search` / `web_extract` when available. Do not open a browser just to answer a basic factual query.
 2. State the goal and a short plan, then proceed on safe, reversible steps without asking the user to copy terminal commands.
 3. Use `delegate_task` for independent research/review tasks only if the tool is present. Subagents have fresh context: include the goal, file paths, evidence, and constraints explicitly. If delegation is unavailable, perform the roles sequentially and label them as roles, not separately running agents.
