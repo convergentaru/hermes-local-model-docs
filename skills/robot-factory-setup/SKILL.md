@@ -37,6 +37,9 @@ Use this as the single starting point for setting up or diagnosing this workstat
 
 ## Runbook
 
+For real user tasks that need a team workflow, use `/robot-factory-agent-company` when installed. The workflow roles are Hermes lead, researcher, executor, and independent auditor; do not pretend separate subagents were spawned when they were not.
+
+
 ### 1. Read-only inventory
 
 Use the terminal tool for these safe checks:
