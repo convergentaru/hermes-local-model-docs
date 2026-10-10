@@ -17,6 +17,11 @@
 
 ## Навигация
 
+### Screenpipe
+- [Screenpipe + Hermes: локальная экранная память](docs/screenpipe/hermes-screenpipe-setup.md)
+- [Skill Screenpipe для Hermes](skills/screenpipe-hermes-memory/SKILL.md)
+
+
 ### Архитектура
 - [Архитектура текущего локального AI-стека](docs/architecture/current-local-ai-stack.md)
 
