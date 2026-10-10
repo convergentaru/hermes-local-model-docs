@@ -10,19 +10,30 @@
 
 ## Установка
 
-### Вариант A — установить одним скриптом из локальной копии репозитория
+### Самый простой вариант — одна команда из GitHub
 
-Если репозиторий уже клонирован, из его корня выполните:
+В обычном терминале Ubuntu (после установки Hermes) выполните:
 
 ~~~bash
-bash scripts/install-hermes-local-ai-skills.sh
+curl -fsSL https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/scripts/install-hermes-local-ai-skills.sh -o /tmp/install-hermes-local-ai-skills.sh && bash /tmp/install-hermes-local-ai-skills.sh
 ~~~
 
-Скрипт проверяет CLI Hermes, пропускает навыки, которые уже видны в списке, и устанавливает отсутствующие из raw-файлов GitHub.
+Скрипт добавляет репозиторий как Hermes skills tap и устанавливает четыре навыка: главный `robot-factory-setup`, диагностику, подключение Unsloth и настройку голоса. Уже видимые навыки не перезаписываются. Установщик не редактирует модельные и голосовые настройки, не скачивает модели и не выводит API-ключи.
 
-### Вариант B — установить отдельными командами
+### Установить репозиторий как источник вручную
 
 ~~~bash
+hermes skills tap add convergentaru/hermes-local-model-docs
+hermes skills install convergentaru/hermes-local-model-docs/robot-factory-setup
+hermes skills install convergentaru/hermes-local-model-docs/local-ai-stack-diagnostics
+hermes skills install convergentaru/hermes-local-model-docs/unsloth-hermes-connect
+hermes skills install convergentaru/hermes-local-model-docs/hermes-voice-setup
+~~~
+
+### Установить отдельные skills по прямым URL
+
+~~~bash
+hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/robot-factory-setup/SKILL.md --name robot-factory-setup
 hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/local-ai-stack-diagnostics/SKILL.md --name local-ai-stack-diagnostics
 hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/unsloth-hermes-connect/SKILL.md --name unsloth-hermes-connect
 hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/hermes-voice-setup/SKILL.md --name hermes-voice-setup
