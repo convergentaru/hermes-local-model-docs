@@ -29,6 +29,7 @@
 - [Hermes Desktop: настройки, auxiliary-задачи и голос](docs/hermes/desktop-settings-and-voice.md)
 - [Пошаговый чек-лист Hermes Desktop](docs/hermes/desktop-practical-checklist.md)
 - [Главный setup-skill Robot Factory OS](skills/robot-factory-setup/SKILL.md)
+- [Безопасный запуск Hermes Desktop в каталоге Robot Factory OS](scripts/start-hermes-desktop.sh)
 - [Компания агентов: роли, видимый браузер и поиск](docs/robot-factory/agent-company-mvp.md)
 - [Skill компании агентов](skills/robot-factory-agent-company/SKILL.md)
 
@@ -45,6 +46,7 @@
 
 ### Голос
 - [Qwen3-ASR, STT и TTS: текущие результаты и план интеграции](docs/voice/qwen3-asr-and-hermes-voice.md)
+- [Первый разговор с Hermes Desktop: текст, микрофон и озвучивание](docs/voice/hermes-desktop-first-voice-test.md)
 
 ### Кодовые агенты
 - [Aider и Little-coder: установка, тесты, ограничения контекста](docs/coding-agents/aider-and-little-coder.md)
