@@ -23,9 +23,11 @@
 ### Hermes
 - [Hermes Desktop: настройки, auxiliary-задачи и голос](docs/hermes/desktop-settings-and-voice.md)
 - [Пошаговый чек-лист Hermes Desktop](docs/hermes/desktop-practical-checklist.md)
+- [Главный setup-skill Robot Factory OS](skills/robot-factory-setup/SKILL.md)
 
 ### Повторяемая настройка (Hermes Skills)
 - [Установка и использование наших skills](docs/skills/install-hermes-skills.md)
+- [Единая команда установки из GitHub](scripts/install-hermes-local-ai-skills.sh)
 - [Диагностика портов и провайдеров](skills/local-ai-stack-diagnostics/SKILL.md)
 - [Подключение Unsloth к Hermes Desktop](skills/unsloth-hermes-connect/SKILL.md)
 - [Голосовой ввод и озвучивание](skills/hermes-voice-setup/SKILL.md)
