@@ -4,6 +4,7 @@ set -euo pipefail
 REPO="convergentaru/hermes-local-model-docs"
 SKILLS=(
   "robot-factory-setup"
+  "robot-factory-agent-company"
   "local-ai-stack-diagnostics"
   "unsloth-hermes-connect"
   "hermes-voice-setup"
