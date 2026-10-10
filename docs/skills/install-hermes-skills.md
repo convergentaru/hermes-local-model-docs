@@ -1,56 +1,37 @@
 # Установка локальных AI-skills в Hermes
 
-Навыки находятся в этом репозитории и устанавливаются в пользовательский каталог Hermes. Отдельно ставить их после каждой перезагрузки не нужно: после установки они остаются в `~/.hermes/skills/` и доступны в новых сессиях. При новой установке Hermes их нужно установить заново.
+Навыки находятся в GitHub-репозитории `convergentaru/hermes-local-model-docs`. Скрипт устанавливает навыки в локальный Hermes; обновление GitHub само по себе не меняет уже установленный экземпляр на компьютере.
 
 ## Навыки
 
-- [robot-factory-agent-company](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/robot-factory-agent-company/SKILL.md)
-- [screenpipe-hermes-memory](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/screenpipe-hermes-memory/SKILL.md) — безопасная локальная экранная память и интеграция Screenpipe через MCP. — workflow руководителя, исследователя, исполнителя и аудитора.
-- [robot-factory-agent-company](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/robot-factory-agent-company/SKILL.md) — роли руководителя, исследователя, исполнителя и аудитора.
-- [local-ai-stack-diagnostics](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/local-ai-stack-diagnostics/SKILL.md) — диагностика портов, провайдеров и маршрута модели; не исправляет конфиг на основании одного различия портов.
-- [unsloth-hermes-connect](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/unsloth-hermes-connect/SKILL.md) — подключение запущенной модели Unsloth к визуальному Hermes Desktop.
-- [hermes-voice-setup](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/hermes-voice-setup/SKILL.md) — последовательная настройка и отдельная проверка STT, LLM и TTS.
+- [robot-factory-setup](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/robot-factory-setup/SKILL.md) — основной маршрут проверки и настройки.
+- [robot-factory-agent-company](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/robot-factory-agent-company/SKILL.md) — роли директора, исследователя, исполнителя и аудитора.
+- [screenpipe-hermes-memory](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/screenpipe-hermes-memory/SKILL.md) — локальная экранная память Screenpipe через MCP с настройками приватности.
+- [local-ai-stack-diagnostics](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/local-ai-stack-diagnostics/SKILL.md) — диагностика маршрутов модели и портов.
+- [unsloth-hermes-connect](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/unsloth-hermes-connect/SKILL.md) — подключение загруженной модели Unsloth.
+- [hermes-voice-setup](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/hermes-voice-setup/SKILL.md) — отдельная настройка и проверка STT, LLM и TTS.
 
-## Установка
+## Установка одним скриптом
 
-### Самый простой вариант — одна команда из GitHub
-
-В обычном терминале Ubuntu (после установки Hermes) выполните:
+В обычном терминале Ubuntu можно выполнить:
 
 ~~~bash
 curl -fsSL https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/scripts/install-hermes-local-ai-skills.sh -o /tmp/install-hermes-local-ai-skills.sh && bash /tmp/install-hermes-local-ai-skills.sh
 ~~~
 
-Скрипт добавляет репозиторий как Hermes skills tap и устанавливает шесть навыков: главный `robot-factory-setup`, компанию агентов `robot-factory-agent-company`, диагностику, подключение Unsloth и настройку голоса. Уже видимые навыки не перезаписываются. Установщик не редактирует модельные и голосовые настройки, не скачивает модели и не выводит API-ключи.
+Установщик добавляет репозиторий как Hermes skills tap и устанавливает шесть навыков. Он не устанавливает сам Hermes, не загружает веса моделей и не переписывает конфигурацию провайдера или голоса. Уже видимые навыки скрипт пропускает; обновление существующих навыков выполняется отдельно.
 
-### Установить репозиторий как источник вручную
+## Установка вручную
 
 ~~~bash
 hermes skills tap add convergentaru/hermes-local-model-docs
 hermes skills install convergentaru/hermes-local-model-docs/robot-factory-setup
 hermes skills install convergentaru/hermes-local-model-docs/robot-factory-agent-company
-/screenpipe-hermes-memory
 hermes skills install convergentaru/hermes-local-model-docs/screenpipe-hermes-memory
-hermes skills install convergentaru/hermes-local-model-docs/robot-factory-agent-company
-/local-ai-stack-diagnostics
+hermes skills install convergentaru/hermes-local-model-docs/local-ai-stack-diagnostics
 hermes skills install convergentaru/hermes-local-model-docs/unsloth-hermes-connect
 hermes skills install convergentaru/hermes-local-model-docs/hermes-voice-setup
 ~~~
-
-### Установить отдельные skills по прямым URL
-
-~~~bash
-hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/robot-factory-setup/SKILL.md --name robot-factory-setup
-hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/robot-factory-agent-company/SKILL.md --name robot-factory-agent-company
-hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/screenpipe-hermes-memory/SKILL.md --name screenpipe-hermes-memory
-hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/local-ai-stack-diagnostics/SKILL.md --name local-ai-stack-diagnostics
-hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/unsloth-hermes-connect/SKILL.md --name unsloth-hermes-connect
-hermes skills install https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills/hermes-voice-setup/SKILL.md --name hermes-voice-setup
-~~~
-
-Hermes официально поддерживает установку одного файла SKILL.md по HTTPS URL. Эти три навыка самодостаточны и не требуют вспомогательных файлов.
-
-Подробный план интеграции: [Screenpipe + Hermes](https://github.com/convergentaru/hermes-local-model-docs/blob/main/docs/screenpipe/hermes-screenpipe-setup.md).
 
 ## Проверка
 
@@ -58,20 +39,16 @@ Hermes официально поддерживает установку одно
 hermes skills list | grep -E 'robot-factory-setup|robot-factory-agent-company|screenpipe-hermes-memory|local-ai-stack-diagnostics|unsloth-hermes-connect|hermes-voice-setup'
 ~~~
 
-Установленные навыки становятся slash-командами. Примеры вызова в Hermes:
+В новой сессии Hermes можно вызывать:
+- `/robot-factory-setup`
+- `/robot-factory-agent-company`
+- `/screenpipe-hermes-memory`
+- `/local-ai-stack-diagnostics`
+- `/unsloth-hermes-connect`
+- `/hermes-voice-setup`
 
-~~~text
-/local-ai-stack-diagnostics
-/unsloth-hermes-connect
-/hermes-voice-setup
-~~~
+Подробная инструкция по подключению Screenpipe: [Screenpipe + Hermes](https://github.com/convergentaru/hermes-local-model-docs/blob/main/docs/screenpipe/hermes-screenpipe-setup.md).
 
-Навыки загружаются в контекст новой сессии. После установки начните новую сессию либо выполните `/reset`, если команда поддерживается текущей версией.
+## Безопасность
 
-## Безопасное обновление
-
-Скрипт установки намеренно не перезаписывает уже установленные навыки. Перед обновлением сохраните текущий каталог навыка и только затем переустановите его. Не используйте `rm -rf ~/.hermes/skills`: там могут находиться другие важные навыки.
-
-## Важное ограничение
-
-Skill — это повторяемая процедура, а не привилегированный установщик операционной системы. Он может проверять окружение и запускать разрешённые команды, но не может гарантированно кликать по любому элементу графического интерфейса. UI-шаги, такие как выбор голоса или модели, могут требовать участия пользователя. Навыки не содержат ключей API или секретов.
+Навык — это повторяемая процедура, а не привилегированный системный установщик. Для записи экрана/аудио, изменения системных служб и настройки браузера может потребоваться участие пользователя. Screenpipe сначала настраивать на экранный захват без микрофона, без облачной синхронизации и без автозапуска; постоянную запись включать только после отдельного согласия.
