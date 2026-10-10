@@ -4,6 +4,7 @@
 
 ## Навыки
 
+- [robot-factory-agent-company](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/robot-factory-agent-company/SKILL.md) — workflow руководителя, исследователя, исполнителя и аудитора.
 - [local-ai-stack-diagnostics](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/local-ai-stack-diagnostics/SKILL.md) — диагностика портов, провайдеров и маршрута модели; не исправляет конфиг на основании одного различия портов.
 - [unsloth-hermes-connect](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/unsloth-hermes-connect/SKILL.md) — подключение запущенной модели Unsloth к визуальному Hermes Desktop.
 - [hermes-voice-setup](https://github.com/convergentaru/hermes-local-model-docs/blob/main/skills/hermes-voice-setup/SKILL.md) — последовательная настройка и отдельная проверка STT, LLM и TTS.
