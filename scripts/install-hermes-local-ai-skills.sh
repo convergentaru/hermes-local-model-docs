@@ -5,6 +5,7 @@ REPO="convergentaru/hermes-local-model-docs"
 SKILLS=(
   "robot-factory-setup"
   "robot-factory-agent-company"
+  "screenpipe-hermes-memory"
   "local-ai-stack-diagnostics"
   "unsloth-hermes-connect"
   "hermes-voice-setup"
@@ -38,7 +39,7 @@ done
 
 echo
 echo "Installed/available Robot Factory skills:"
-hermes skills list | grep -E 'robot-factory-setup|robot-factory-agent-company|local-ai-stack-diagnostics|unsloth-hermes-connect|hermes-voice-setup' || true
+hermes skills list | grep -E 'robot-factory-setup|robot-factory-agent-company|screenpipe-hermes-memory|local-ai-stack-diagnostics|unsloth-hermes-connect|hermes-voice-setup' || true
 
 echo
 echo "Done. Start a new Hermes session (or use /reset if supported)."
