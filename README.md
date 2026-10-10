@@ -27,6 +27,7 @@
 
 ### Повторяемая настройка (Hermes Skills)
 - [Установка и использование наших skills](docs/skills/install-hermes-skills.md)
+- [Готовый промпт для Hermes: установить skills из GitHub и проверить их](docs/hermes/prompt-install-and-test-from-github.md)
 - [Единая команда установки из GitHub](scripts/install-hermes-local-ai-skills.sh)
 - [Диагностика портов и провайдеров](skills/local-ai-stack-diagnostics/SKILL.md)
 - [Подключение Unsloth к Hermes Desktop](skills/unsloth-hermes-connect/SKILL.md)
