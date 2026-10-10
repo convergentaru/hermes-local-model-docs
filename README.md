@@ -24,6 +24,12 @@
 - [Hermes Desktop: настройки, auxiliary-задачи и голос](docs/hermes/desktop-settings-and-voice.md)
 - [Пошаговый чек-лист Hermes Desktop](docs/hermes/desktop-practical-checklist.md)
 
+### Повторяемая настройка (Hermes Skills)
+- [Установка и использование наших skills](docs/skills/install-hermes-skills.md)
+- [Диагностика портов и провайдеров](skills/local-ai-stack-diagnostics/SKILL.md)
+- [Подключение Unsloth к Hermes Desktop](skills/unsloth-hermes-connect/SKILL.md)
+- [Голосовой ввод и озвучивание](skills/hermes-voice-setup/SKILL.md)
+
 ### Unsloth
 - [Unsloth Desktop: общая библиотека, CUDA и собственный llama.cpp](docs/unsloth/studio-model-library-and-custom-llama-cpp.md)
 
