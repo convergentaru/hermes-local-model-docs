@@ -41,6 +41,7 @@
 
 ### Отчёты экспериментов
 - [10 октября 2026: Unsloth + Qwen3.5-4B](docs/experiments/2026-10-10-unsloth-qwen35-4b.md)
+- [10 октября 2026: диагностика портов Unsloth и llama-server](docs/experiments/2026-10-10-unsloth-port-routing-diagnosis.md)
 - [9–10 октября 2026: Qwen3.6-35B и Aider](docs/experiments/2026-10-10-qwen36-35b-context-and-aider.md)
 
 ### Ранее созданные документы
