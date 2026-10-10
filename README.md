@@ -21,7 +21,8 @@
 - [Архитектура текущего локального AI-стека](docs/architecture/current-local-ai-stack.md)
 
 ### Hermes
-- [Hermes Desktop: модель, auxiliary-задачи и голос](docs/hermes/desktop-settings-and-voice.md)
+- [Hermes Desktop: настройки, auxiliary-задачи и голос](docs/hermes/desktop-settings-and-voice.md)
+- [Пошаговый чек-лист Hermes Desktop](docs/hermes/desktop-practical-checklist.md)
 
 ### Unsloth
 - [Unsloth Desktop: общая библиотека, CUDA и собственный llama.cpp](docs/unsloth/studio-model-library-and-custom-llama-cpp.md)
