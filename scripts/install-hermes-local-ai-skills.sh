@@ -1,29 +1,44 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_URL="https://raw.githubusercontent.com/convergentaru/hermes-local-model-docs/main/skills"
+REPO="convergentaru/hermes-local-model-docs"
+SKILLS=(
+  "robot-factory-setup"
+  "local-ai-stack-diagnostics"
+  "unsloth-hermes-connect"
+  "hermes-voice-setup"
+)
 
 if ! command -v hermes >/dev/null 2>&1; then
-  echo "ERROR: command 'hermes' not found. Install Hermes Agent first." >&2
+  echo "ERROR: Hermes CLI was not found. Install Hermes first, then rerun this script." >&2
   exit 1
 fi
 
-install_skill() {
-  local name="$1"
-  local url="$2"
+echo "Hermes version:"
+hermes --version
+echo
 
+if ! hermes skills tap list 2>/dev/null | grep -Fq "$REPO"; then
+  echo "Adding GitHub skills source: $REPO"
+  hermes skills tap add "$REPO"
+else
+  echo "GitHub skills source is already configured: $REPO"
+fi
+
+for name in "${SKILLS[@]}"; do
   if hermes skills list 2>/dev/null | grep -Fq "$name"; then
-    printf 'SKIP: %s already appears in hermes skills list. Existing version was not overwritten.\n' "$name"
+    echo "SKIP: $name already appears in the local skill list."
   else
-    printf '\nInstalling %s...\n' "$name"
-    hermes skills install "$url" --name "$name"
+    echo
+    echo "Installing from GitHub: $REPO/$name"
+    hermes skills install "$REPO/$name"
   fi
-}
+done
 
-install_skill "local-ai-stack-diagnostics" "$BASE_URL/local-ai-stack-diagnostics/SKILL.md"
-install_skill "unsloth-hermes-connect" "$BASE_URL/unsloth-hermes-connect/SKILL.md"
-install_skill "hermes-voice-setup" "$BASE_URL/hermes-voice-setup/SKILL.md"
+echo
+echo "Installed/available Robot Factory skills:"
+hermes skills list | grep -E 'robot-factory-setup|local-ai-stack-diagnostics|unsloth-hermes-connect|hermes-voice-setup' || true
 
-printf '\nInstalled/available skills:\n'
-hermes skills list | grep -E 'local-ai-stack-diagnostics|unsloth-hermes-connect|hermes-voice-setup' || true
-printf '\nStart a new Hermes session (or /reset) so the skill list is refreshed.\n'
+echo
+echo "Done. Start a new Hermes session (or use /reset if supported)."
+echo "Main entry point: /robot-factory-setup"
