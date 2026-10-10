@@ -54,6 +54,9 @@
 - [Скрипт загрузки коллекции моделей](scripts/download-local-model-collection.sh)
 - [Объединение библиотеки моделей и запуск Unsloth](scripts/unify-model-library-and-start-unsloth.sh)
 
+### Диагностика неполадок
+- [Восстановление Hermes Desktop после Custom HTTP 401 (Unsloth)](docs/troubleshooting/2026-10-10-hermes-custom-401-unsloth.md)
+
 ## Проверенные результаты
 
 - Unsloth Desktop запускает Qwen3.5-4B через пользовательский бинарник llama.cpp; короткий ответ `UNSLOTH_CUDA_TEST_OK` прошёл. UI показал 68.4 tok/s.
