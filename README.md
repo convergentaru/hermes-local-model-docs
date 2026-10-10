@@ -1,0 +1,62 @@
+# Hermes + Unsloth: локальная AI-лаборатория
+
+База знаний по Ubuntu-компьютеру: модели, Unsloth Desktop, собственная CUDA-сборка llama.cpp, Hermes Desktop, голосовой ввод и кодовые агенты.
+
+> Ведём документацию по принципу: проверенные факты отдельно от планов. Не публикуем API-ключи, пароли, токены и содержимое файлов секретов.
+
+## Текущее устройство
+
+- Библиотека моделей: `/home/oleg/models`.
+- GUI выбора и запуска моделей: Unsloth Desktop.
+- GGUF inference engine: CUDA.
+- Custom llama.cpp folder: `/home/oleg/llama.cpp/build-cublas/bin`.
+- Основной агент: визуальный Hermes Desktop.
+- Проверенная модель через Unsloth: Qwen3.5-4B Q4_K_M, alias `qwen35-4b`.
+- Голос: Qwen3-ASR-0.6B распознаёт русскую речь в Unsloth. Прямая интеграция этого ASR с Hermes и TTS ещё не завершены.
+- Код: Aider 0.86.2 установлен; Little-coder установлен, но в последнем сеансе не проходил отдельный тест.
+
+## Навигация
+
+### Архитектура
+- [Архитектура текущего локального AI-стека](docs/architecture/current-local-ai-stack.md)
+
+### Hermes
+- [Hermes Desktop: модель, auxiliary-задачи и голос](docs/hermes/desktop-settings-and-voice.md)
+
+### Unsloth
+- [Unsloth Desktop: общая библиотека, CUDA и собственный llama.cpp](docs/unsloth/studio-model-library-and-custom-llama-cpp.md)
+
+### Голос
+- [Qwen3-ASR, STT и TTS: текущие результаты и план интеграции](docs/voice/qwen3-asr-and-hermes-voice.md)
+
+### Кодовые агенты
+- [Aider и Little-coder: установка, тесты, ограничения контекста](docs/coding-agents/aider-and-little-coder.md)
+
+### Отчёты экспериментов
+- [10 октября 2026: Unsloth + Qwen3.5-4B](docs/experiments/2026-10-10-unsloth-qwen35-4b.md)
+- [9–10 октября 2026: Qwen3.6-35B и Aider](docs/experiments/2026-10-10-qwen36-35b-context-and-aider.md)
+
+### Ранее созданные документы
+- [Выбор локальной модели для Hermes](hermes-local-model-selection-and-setup.md)
+- [Установка Qwen3.6-35B-A3B](qwen36-35b-a3b-ubuntu-install.md)
+- [Дорожная карта локальной AI-лаборатории: LEGO/CAD/анализ крыш](local-ai-lab-lego-cad-roof-vision-roadmap.md)
+- [Скрипт загрузки коллекции моделей](scripts/download-local-model-collection.sh)
+- [Объединение библиотеки моделей и запуск Unsloth](scripts/unify-model-library-and-start-unsloth.sh)
+
+## Проверенные результаты
+
+- Unsloth Desktop запускает Qwen3.5-4B через пользовательский бинарник llama.cpp; короткий ответ `UNSLOTH_CUDA_TEST_OK` прошёл. UI показал 68.4 tok/s.
+- Команда `unsloth start hermes --app` выполнена; визуальный Hermes после подключения успешно ответил контрольной строкой.
+- Qwen3-ASR-0.6B хорошо распознаёт русскую речь внутри Unsloth.
+- Не завершено: передача аудио из Hermes непосредственно в Qwen3-ASR-0.6B и озвучивание ответов Hermes.
+- Не проверено: переключение моделей через GUI во всех сценариях и полная стабильность очень длинного контекста.
+
+## Ссылки
+
+- [Hermes Desktop: подробная настройка](https://habr.com/ru/articles/1044270/)
+- [Hermes: оптимизация вспомогательных моделей](https://habr.com/ru/articles/1042860/)
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent)
+- [Unsloth](https://github.com/unslothai/unsloth)
+- [llama.cpp](https://github.com/ggml-org/llama.cpp)
+- [Aider](https://aider.chat/)
+- [Little-coder](https://github.com/itayinbarr/little-coder)
