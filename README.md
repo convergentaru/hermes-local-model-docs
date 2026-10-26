@@ -26,6 +26,7 @@
 - [Архитектура текущего локального AI-стека](docs/architecture/current-local-ai-stack.md)
 
 ### Hermes
+- [Project Atlas: аудит проектов, долговременная память и синхронизация](docs/hermes/PROJECT-ATLAS-PROMPT.md) — короткая точка входа; полная пошаговая инструкция находится в `docs/hermes/project-atlas/START.md`.
 - [Hermes Desktop: настройки, auxiliary-задачи и голос](docs/hermes/desktop-settings-and-voice.md)
 - [Пошаговый чек-лист Hermes Desktop](docs/hermes/desktop-practical-checklist.md)
 - [Главный setup-skill Robot Factory OS](skills/robot-factory-setup/SKILL.md)
