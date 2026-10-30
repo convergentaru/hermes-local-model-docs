@@ -17,6 +17,16 @@
 
 ## Навигация
 
+## Единая память и текущая работа
+
+- [Протокол общей памяти ChatGPT ↔ Hermes ↔ GitHub](docs/operations/SHARED-MEMORY-PROTOCOL.md) — обязателен перед продолжением старых задач.
+- [Текущее состояние локального AI-стека](CURRENT_STATE.md).
+- [Проверенные и исторические конфигурации](KNOWN_GOOD_CONFIGS.md).
+- [Журнал экспериментов и ошибок](EXPERIMENT_LOG.md).
+- [Архитектурные решения](DECISIONS.md).
+- [Следующее действие](NEXT_ACTION.md) — один конкретный шаг, с которого продолжать.
+
+
 ### Screenpipe
 - [Screenpipe + Hermes: локальная экранная память](docs/screenpipe/hermes-screenpipe-setup.md)
 - [Skill Screenpipe для Hermes](skills/screenpipe-hermes-memory/SKILL.md)
