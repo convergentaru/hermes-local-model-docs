@@ -188,3 +188,25 @@ Detailed evidence, version caveats and recovery plan: https://github.com/converg
 Документ: `docs/model-selection/BENCHMARK-PROTOCOL.md`.
 
 **Статус:** DECIDED / DOCUMENTED. Никакие skills не устанавливались, модельные серверы не запускались, runtime-конфигурация не менялась.
+
+
+---
+
+## 2026-10-31 — second Hermes report: partial SystemRescue translation artifact inventory
+
+Hermes reported two files in `/home/oleg/fcm-opencode-test`:
+- `Configuring_SystemRescue_sysconfig.md` — 15,020 bytes, SHA-256 `c9e4d2e1351dc182b0032fa97eb3e91a6bb6fe3c9da436f199addaabc232c066`.
+- `Downloading_and_burning.md` — 3,008 bytes, SHA-256 `99198e2a28c27f805bfa0bcd8b19e4a30b418d1feee405ec659c90939fac8699`.
+
+Both original and translated paths are reported identical, indicating possible in-place replacement. This has not been verified from filesystem contents; preserve copies before any change. Six other files from the "remaining eight" task were not located in this directory, and their filenames are still unknown.
+
+New context values reported by Hermes:
+- config context window: 131072;
+- auto-compress threshold: 100000;
+- historical llama-server args: `-c 160000`, `--parallel 1`, Flash Attention enabled, context shift disabled, fit enabled and fit target 160000;
+- subagent `last_prompt_tokens=32964`.
+- cache_read displayed as `61,35`, ambiguous; cache_write 428377.
+
+Do not derive compression_count from cache_write_tokens. The 131072 Hermes context, 100000 threshold and 160000 server context are separate values; this mismatch needs a historical config/runtime audit. The 70K hard model limit remains unsupported. Session `20261024_094607_8dc40d` still has a year discrepancy (ID suggests 2026, reported timestamp says 2024).
+
+Canonical evidence and action plan: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
