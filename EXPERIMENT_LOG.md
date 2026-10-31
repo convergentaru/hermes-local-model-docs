@@ -380,3 +380,28 @@ At 13:35:54 the earlier Gateway process attempted provider `custom`, base URL `h
 - No service start/restart, install, or unit modification was performed in this step.
 
 **Next:** one real one-shot Hermes CLI request through the running Gateway, using the already configured Custom provider, then record the exact response/error. Do not repeat system-scope service checks and do not restart the Gateway.
+
+
+---
+
+## 2026-10-31 — successful Hermes Custom → Unsloth smoke test
+
+**User-provided result:** Hermes resumed session
+`local-bd95986af8a0ecfcfc909532acc3d5ae08730dee0c92b157d4e21eba2c508371`.
+
+The restored model was:
+`Qwen3.5-9B-Q4_K_M (custom:unsloth-qwen-160k)`.
+
+The previous conversation showed the exact test:
+```text
+User: Ответь строго одной строкой: HERMES_UNSLOTH_OK
+Hermes: HERMES_UNSLOTH_OK
+```
+
+**Result:** the Hermes CLI successfully generated the expected response via its selected Custom provider. This is a functional test of the Hermes CLI → Custom provider → Unsloth route.
+
+**Scope limitation:** this does not test inbound requests from Telegram/WhatsApp or other messaging adapters through the Gateway. The Gateway daemon itself was separately confirmed active as a user systemd service; its startup logs said no messaging platforms were enabled, and WhatsApp was not paired/configured.
+
+**Status:** VERIFIED for Hermes CLI inference through Custom/Unsloth. Messaging-platform integration remains NOT CONFIGURED / NOT TESTED. No service restart or configuration change was required for this test.
+
+**Next:** fresh Claude Code smoke test against the already running Unsloth endpoint; then one process/model inventory to ensure no second inference server appeared.
