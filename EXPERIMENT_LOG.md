@@ -320,3 +320,30 @@ Read-only inspection of:
 `journalctl -u hermes-gateway.service -n 40 --no-pager`.
 
 Do not start the old `llama-server.service`. Do not edit Hermes config or systemd units until the Gateway's actual unit and failure/stop reason are known.
+
+
+---
+
+## 2026-10-31 — Hermes Gateway unit not found in system scope; scope check correction
+
+**User command:** inspected `systemctl status`, `systemctl cat` and `journalctl` for `hermes-gateway.service` without `--user`.
+
+**Exact result:**
+```text
+Unit hermes-gateway.service could not be found.
+No files found for hermes-gateway.service.
+-- No entries --
+```
+
+**Interpretation:** the system systemd manager does not know this unit. This does not prove that the Gateway is uninstalled; Hermes documents a user-scope service as the normal Linux setup, with service files under `~/.config/systemd/user`. The previous unqualified `systemctl is-active` response of `inactive` was not sufficient to establish the Gateway state.
+
+**Research:** current official Hermes Messaging Gateway documentation lists:
+- `hermes gateway status` to inspect the default service;
+- `systemctl --user` / `journalctl --user -u hermes-gateway` for the default Linux user service;
+- `hermes gateway status --system` and system journal only for an explicit `--system` installation.
+
+**Status:** OBSERVED (system-scope unit not found); actual Gateway process/service scope remains UNKNOWN.
+
+**Next diagnostic:** execute `hermes gateway status`, followed by read-only `systemctl --user status/cat` and `journalctl --user`. Do not install/start/reconfigure the Gateway until this is understood.
+
+Source: https://hermes-agent.nousresearch.com/docs/user-guide/messaging
