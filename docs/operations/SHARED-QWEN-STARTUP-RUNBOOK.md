@@ -131,3 +131,28 @@ journalctl --user -u hermes-gateway.service -n 40 --no-pager
 ```
 
 Do not install/start/restart the Gateway yet. First determine whether the user unit exists, whether a Gateway process is running outside systemd, or whether this Hermes install uses another service name/profile. Official source: https://hermes-agent.nousresearch.com/docs/user-guide/messaging
+
+
+---
+
+## Actual Gateway status — user service already running (2026-10-31)
+
+The prior Phase 2 "Gateway recovery" diagnosis is superseded. User-provided output proves:
+- `hermes gateway status` → User gateway service is running.
+- The user unit `~/.config/systemd/user/hermes-gateway.service` is active and enabled.
+- systemd linger enabled.
+- Main PID 1822 during the check.
+
+Therefore Phase 2 does not require reinstalling or starting the Gateway. The system-scope unit lookup was the wrong manager for this installation.
+
+The remaining warning is at the messaging-platform layer: Gateway reports no messaging platforms enabled; WhatsApp is enabled but has no bot credential / is not paired. This does not stop the local Gateway daemon. Messaging setup is separate from the local Hermes CLI inference test.
+
+### Next acceptance test: Hermes → existing Gateway → Unsloth
+
+```bash
+hermes chat --oneshot -q "Ответь строго одной строкой: HERMES_UNSLOTH_OK"
+```
+
+A model-generated `HERMES_UNSLOTH_OK` confirms the local Hermes CLI/Gateway request path against the configured Custom Unsloth endpoint. Capture errors exactly if the request fails. Do not restart the Gateway before this test.
+
+Official Hermes docs: https://hermes-agent.nousresearch.com/docs/user-guide/messaging and https://hermes-agent.nousresearch.com/docs/reference/cli-commands
