@@ -298,3 +298,34 @@ Unsloth's upstream CI helper obtains the public API key from the `unsloth run` s
 https://github.com/unslothai/unsloth/blob/main/.github/scripts/serve-unsloth-run.sh
 
 For the existing configuration, use `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` from `~/.hermes/.env` for the public wrapper check. Keep the token out of logs and terminal output.
+
+
+---
+
+## Final post-cleanup functional acceptance — passed 2026-10-31
+
+The user queried Unsloth wrapper `GET /v1/models` with the existing public wrapper credential from `~/.hermes/.env`. Output showed:
+- `Qwen3.5-9B-Q4_K_M loaded`.
+- all other returned presets unloaded.
+
+A real `POST /v1/chat/completions` returned exact expected response:
+`UNSLOTH_AFTER_ROUTER_STOP_OK`.
+
+This is a post-cleanup test after the legacy Hermes router was stopped/disabled. Combined with:
+- Hermes CLI → Unsloth: `HERMES_UNSLOTH_OK`.
+- Claude Code v2.1.286 with `unsloth start claude --no-serve` → Unsloth: `CLAUDE_UNSLOTH_OK`.
+- Hermes Gateway user service active.
+- legacy router inactive/disabled.
+- one llama-server process.
+
+**Runtime recovery phase: VERIFIED COMPLETE.**
+
+### Startup/reboot status
+- Exact manual Unsloth launch command: verified in a running session.
+- Hermes Gateway user-service autostart: enabled; linger enabled.
+- Legacy router autostart: disabled.
+- Claude Code attachment command: verified.
+- Clean reboot and complete restart sequence: not yet performed.
+- Unsloth systemd/boot autostart: not configured and not claimed.
+
+Do not add an Unsloth systemd unit until its supported foreground/lifecycle management is researched and tested. Next work is to present/review the concise manual startup checklist; optionally validate it with a controlled reboot at the user's convenience.
