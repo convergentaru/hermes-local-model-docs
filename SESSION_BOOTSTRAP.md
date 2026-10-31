@@ -298,3 +298,14 @@ The latest exact-name process inventory returned **two** active `llama-server` p
 This means the one-server process invariant is not yet met. It remains unknown whether the old Hermes server at 18434 currently has any model loaded. PID 1823 is a child of user systemd manager; map it to the exact unit via `systemctl --user status 1823`. A disabled unit may still be active in the current session.
 
 Do not kill/stop PID 1823 or touch the Unsloth process until the owning unit and loaded model list on 18434 are verified. Hermes and Claude Code successful generation through Unsloth remain valid; they do not prove that the legacy server is absent.
+
+
+---
+
+## Legacy inference router discovery — 2026-10-31
+
+PID 1823 is the active user service `llama-server.service` at port 18434. It uses Hermes' bundled llama.cpp in router mode, with model presets and on-demand autoload. Its current RSS is 11.4M (peak 242.3M). It has not yet been confirmed whether any child model is currently loaded; query router `GET /models` before any stop.
+
+The distinct `hermes-qwen35.service` is inactive/dead and disabled. It is not PID 1823.
+
+Do not stop PID 1823 or its unit before checking loaded model state and dependency. Unsloth PID 10358 remains the active Qwen service.
