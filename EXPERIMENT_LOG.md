@@ -165,3 +165,26 @@ Detailed evidence, version caveats and recovery plan: https://github.com/converg
 - Модельный вопрос вернётся после аудио. Тогда сначала проверить свободные ресурсы и локальный файл прежней Qwen3.6-35B-A3B, а не скачивать вслепую.
 
 **Статус:** DECIDED / NO RUNTIME CHANGE. Приоритет добавлен в voice notes, CURRENT_STATE и NEXT_ACTION.
+
+
+---
+
+## 2026-10-31 — принято постоянное использование benchmark при сравнении моделей
+
+**Уточнение пользователя:** регулярно использовать benchmark / benchmark-models при сравнении моделей и производительности.
+
+**Результат исследования:** публичный skill `benchmark-models` из gstack сравнивает Claude, GPT через Codex CLI и Gemini на одинаковом prompt, измеряя latency, tokens, cost и опционально quality через LLM judge. Это не следует считать готовым локальным benchmark harness для Qwen/Unsloth без проверки custom endpoint support и зависимостей.
+
+Для локального стека закреплён собственный протокол:
+- capability benchmarks отдельно от inference/runtime measurements;
+- TTFT, prefill tok/s, generation tok/s;
+- peak VRAM/RAM, KV placement/offload, actual context;
+- tool-call success, correctness, retries и elapsed time;
+- одинаковые prompts/client routes и несколько повторов, median/range;
+- сохранить raw traces и failed runs.
+
+Стандартный Hermes ecosystem skill `evaluating-llms-harness` может использоваться для отдельных academic/capability evaluations после проверки зависимостей и доступных ресурсов; он не заменяет hardware benchmark и agent task suite.
+
+Документ: `docs/model-selection/BENCHMARK-PROTOCOL.md`.
+
+**Статус:** DECIDED / DOCUMENTED. Никакие skills не устанавливались, модельные серверы не запускались, runtime-конфигурация не менялась.
