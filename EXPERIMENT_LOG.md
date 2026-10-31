@@ -231,3 +231,32 @@ Canonical evidence and action plan: https://github.com/convergentaru/pc-rescue-p
 Protocol and copy/paste prompt: `docs/operations/HOME-DIRECTORY-AUDIT.md`.
 
 **Status:** PLANNED. No HOME filesystem scan has been run by ChatGPT; no local changes have been made.
+
+
+---
+
+## 2026-10-31 — расширение HOME audit до длительного агентного задания и Paperclip-пилота
+
+**Пользовательская цель:** перестать ограничиваться короткими проверками и давать Hermes и Claude Code длительную полезную работу; в дальнейшем ставить ночные задания через Paperclip.
+
+**Paperclip research (official docs checked 2026-10-31):**
+- Release page shows v2026.1023.0 (released 2026-10-23).
+- Built-in adapters include `hermes_local`, `hermes_gateway` and `claude_local`.
+- Paperclip agents run in scheduled/assignment/comment/manual heartbeats rather than an endless process; runs have transcripts.
+- Hermes adapter supports persistent sessions across heartbeats; documented default timeout 300 sec, configurable `timeoutSec`, `maxIterations`, toolsets and `persistSession`.
+- Claude local adapter supports persisted sessions across heartbeats, `timeoutSec` (0 = no process timeout), and `maxTurnsPerRun` (documented default 300).
+- Custom Unsloth/Qwen route has not yet been proven through both Paperclip adapters. Claude adapter's env configuration and Hermes local/custom-provider settings must be smoke-tested. Hermes Gateway adapter requires an explicitly enabled Hermes API server; do not assume the existing Gateway UI/service is the same endpoint.
+
+**Long-running HOME audit role split:**
+- Hermes: storage/filesystem/model/ISO/archive/cache/build inventory, metadata-only.
+- Claude Code: local projects/Git repository workspace map, status and build-folder inventory.
+- Then sequential cross-review and a shared evidence-backed action backlog.
+- No cleanup, installs, downloads, config changes, file writes or external publishing during initial audit.
+
+**Scheduling constraint:** current Unsloth has `--parallel 1`; agents must be staggered. A simultaneous heartbeat does not create extra model capacity.
+
+**Safety:** sensitive directories and file contents are excluded; report publication must be sanitized. Overnight autonomy remains disabled until adapter routing, checkpoint/resume and Stop controls pass tests.
+
+**Docs:** `docs/operations/LONG-RUNNING-AGENT-WORK-PAPERCLIP.md`, expanded `docs/operations/HOME-DIRECTORY-AUDIT.md`.
+
+**Status:** RESEARCHED / DESIGNED / NOT RUN. No Paperclip install, agent adapter config or local HOME scan has been performed by ChatGPT.
