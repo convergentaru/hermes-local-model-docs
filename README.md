@@ -19,6 +19,9 @@
 
 ## Единая память и текущая работа
 
+- [SESSION_BOOTSTRAP.md](SESSION_BOOTSTRAP.md) — короткая точка восстановления контекста после перерыва.
+- [AGENTS.md](AGENTS.md) — автоматически загружаемые инструкции для Hermes, OpenCode и jcode при работе в этом репозитории.
+
 - [Протокол общей памяти ChatGPT ↔ Hermes ↔ GitHub](docs/operations/SHARED-MEMORY-PROTOCOL.md) — обязателен перед продолжением старых задач.
 - [Текущее состояние локального AI-стека](CURRENT_STATE.md).
 - [Проверенные и исторические конфигурации](KNOWN_GOOD_CONFIGS.md).
