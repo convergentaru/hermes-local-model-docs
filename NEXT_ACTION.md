@@ -274,3 +274,33 @@ Next step is read-only:
 4. `journalctl --user -u hermes-gateway.service -n 40 --no-pager`.
 
 If the user manager reports the unit missing too, inspect the Hermes CLI status output and existing user unit files before considering any install. Do not run `hermes gateway install`, `start`, or `run` yet. Do not start the legacy `llama-server.service`.
+
+
+---
+
+## Latest active step — end-to-end Hermes → Gateway → Unsloth smoke test (2026-10-31)
+
+The existing Hermes Gateway is already running and enabled as a **user service**. This is verified by the user's full output:
+- `hermes gateway status`: User gateway service is running.
+- `systemctl --user`: active (running), enabled.
+- Unit path: `~/.config/systemd/user/hermes-gateway.service`.
+- PID 1822; systemd linger enabled.
+
+Do NOT repeat system-scope checks; they queried the wrong manager. Do NOT restart/install/reconfigure the Gateway.
+
+The Gateway reports `No messaging platforms enabled`; WhatsApp is enabled but has no profile bot credential and is not paired. This is a messaging integration warning, not a stopped service.
+
+The old 13:35:54 Gateway custom-provider attempt failed with `APIConnectionError` before the most recent confirmed Unsloth API success. A fresh end-to-end request is now required.
+
+### One next action
+Run exactly one documented Hermes one-shot chat through the running Gateway:
+
+```bash
+hermes chat --oneshot -q "Ответь строго одной строкой: HERMES_UNSLOTH_OK"
+```
+
+Expected: model-generated response `HERMES_UNSLOTH_OK`. Capture the complete output, including any error. This tests the existing Hermes CLI/Gateway session path and its configured Custom provider against Unsloth.
+
+Do not run a second test, alter the provider, start a service, or touch `hermes-qwen35.service` until the first result is reviewed.
+
+After success: test Claude Code on the already-running Unsloth server, then check the process list once to ensure one inference server. Gateway messaging platform setup (e.g. WhatsApp/Telegram) is a separate optional task and must not be mixed into this local CLI inference test.
