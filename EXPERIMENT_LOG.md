@@ -496,3 +496,28 @@ Observed:
 **Interpretation:** PID 1823 is the legacy Hermes router, not the active Unsloth Qwen process. Low memory and router-mode startup suggest it may have no loaded child model; this remains an inference until its `GET /models` state is checked.
 
 **Status:** owner unit VERIFIED; active loaded-model inventory on port 18434 UNKNOWN; no service was stopped.
+
+
+---
+
+## 2026-10-31 — legacy Hermes router confirmed empty; safe deactivation planned
+
+**User's read-only router query** against port 18434:
+- `GET /models`: seven preset models returned, every model status `unloaded`.
+- `GET /v1/models`: same seven presets, every model status `unloaded`.
+- The checked list includes `Qwen3.5-9B-Q4_K_M`, also unloaded.
+
+**Unit configuration:**
+- `llama-server.service` in the user systemd manager.
+- Starts Hermes-bundled llama.cpp in router mode on 127.0.0.1:18434.
+- `--models-max 1 --models-autoload`.
+- `Restart=on-failure`; `WantedBy=default.target`.
+- No loaded model is held by this router according to its own API.
+
+**Other service:** `hermes-qwen35.service` is inactive/dead and disabled; unrelated to PID 1823.
+
+**Interpretation:** two server processes were present, but only the Unsloth server had a loaded model. The 18434 router is idle and unnecessary for the target architecture where Hermes Custom and Claude Code both connect to Unsloth. The existing Gateway user unit does not declare a dependency on `llama-server.service`; Hermes' current configured provider points to Unsloth and has passed its direct smoke test.
+
+**Planned action:** `systemctl --user disable --now llama-server.service`, which stops the idle router and removes its automatic start link. This preserves the unit file and model presets. It is a reversible service-state change, not deletion. This command has not yet been run by the user.
+
+**Post-change acceptance:** check old unit inactive/disabled; Gateway user service still active; Unsloth API remains functional; exact `llama-server` process count is 1. Do not stop Unsloth.
