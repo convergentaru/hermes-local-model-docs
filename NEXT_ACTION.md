@@ -169,3 +169,16 @@ The separate user priority remains unchanged: audio work first; larger-model dow
 ## Benchmark protocol for any future model switch
 
 Follow `docs/model-selection/BENCHMARK-PROTOCOL.md`: compare identical tasks, measure TTFT, prefill/generation tok/s, peak VRAM/RAM, context stability, tool-call success and output correctness. Preserve raw traces and failed runs. Do this only after the user's current audio priority is addressed.
+
+
+---
+
+## User-requested comparison — HOME directory audit (2026-10-31)
+
+Run the protocol in `docs/operations/HOME-DIRECTORY-AUDIT.md`:
+1. Start with a tiny simultaneous no-tools probe in Hermes and Claude Code to observe contention for the one current Unsloth slot.
+2. Run identical bounded read-only HOME metadata audits sequentially in the two agents.
+3. Cross-review each report in the other agent.
+4. Bring the reports back for comparison and sanitized GitHub publication.
+
+Do not inspect sensitive contents or make changes. Do not run both full audits concurrently while `--parallel 1` is configured. This task does not authorize changing model context, slots or server configuration.
