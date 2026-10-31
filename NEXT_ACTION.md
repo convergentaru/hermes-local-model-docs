@@ -492,3 +492,19 @@ Then finalize the manual startup sequence:
 6. Verify one llama-server process.
 
 A true clean-reboot exercise and automatic Unsloth service remain explicitly unverified. Do not create a systemd Unsloth service without inspecting the installed CLI's supported lifecycle/foreground behaviour first.
+
+
+---
+
+## Latest next action — final Unsloth API verification after router cleanup (2026-10-31)
+
+Post-change user verification has passed:
+- `llama-server.service`: inactive/disabled.
+- `hermes-gateway.service`: active.
+- `pgrep -xc llama-server`: 1.
+
+The legacy Hermes router was empty (all seven presets unloaded) before being stopped. Its unit and model presets remain on disk.
+
+Next run one direct authenticated request to `http://127.0.0.1:8888/v1`, reading the API token from the existing Unsloth key file but never printing it. This is a post-cleanup health test. Hermes and Claude Code already passed exact response tests; do not repeat their tests unless the direct request fails.
+
+After the API check, consolidate the exact manual startup sequence. Do not create a dedicated Unsloth systemd unit or change auto-start until the installed CLI foreground/lifecycle behaviour is confirmed. Clean reboot acceptance remains pending.
