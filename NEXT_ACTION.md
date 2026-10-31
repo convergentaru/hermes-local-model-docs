@@ -408,3 +408,22 @@ After unit ownership is established, check the legacy server's current loaded mo
 - Do not repeat Hermes or Claude Code smoke tests; both already passed.
 - Do not restart Gateway; its user service is active.
 - Do not assume two server processes necessarily equal two loaded copies of Qwen.
+
+
+---
+
+## Latest active step — check legacy Hermes router model state (2026-10-31)
+
+PID 1823 is now definitively mapped to user unit `llama-server.service`, active and enabled. It is the Hermes-bundled router on port 18434. It starts in router mode with `--models-max 1 --models-autoload`; log says models load on demand. Its process RSS is only 11.4M (peak 242.3M), but this alone is not conclusive proof of an empty model set.
+
+`hermes-qwen35.service` is a separate unit and is `inactive (dead)`, disabled. Do not confuse it with PID 1823.
+
+### Next action — one read-only router inventory
+Query `GET /models` on port 18434, authenticating using the API key already present in PID 1823's command line without printing that key, and inspect the unit file. The llama.cpp router `/models` endpoint returns each available model and its current status such as `loaded` or `unloaded`.
+
+Do not stop `llama-server.service` until:
+1. Router model inventory confirms no model is loaded.
+2. Current Hermes config does not depend on this router (the Custom Unsloth CLI test already passed, but preserve existing Gateway and memory).
+3. Service/unit dependency is understood.
+
+Keep Unsloth PID 10358 alive; do not repeat Hermes or Claude smoke tests.
