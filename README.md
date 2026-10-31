@@ -80,6 +80,10 @@
 
 - [Кандидаты для обновления модели Hermes + Claude Code](docs/model-selection/2026-10-31-upgrade-candidates.md) — Qwen3.8-27B и ранее использовавшаяся Qwen3.6-35B-A3B; без изменения текущей конфигурации.
 
+### Аудит домашней папки
+
+- [Сравнительный аудит HOME: Hermes vs Claude Code](docs/operations/HOME-DIRECTORY-AUDIT.md) — безопасный read-only протокол, проверка одного серверного слота и перекрёстная проверка отчётов.
+
 ### Интеграции
 
 - [Hermes ↔ Claude Code: варианты интеграции и решение](docs/integrations/hermes-claude-code.md) — исследование и решение пока не настраивать MCP.
