@@ -82,3 +82,28 @@ jcode --provider-profile unsloth-qwen run 'Reply exactly: JCODE_UNSLOTH_OK'
 **Безопасность:** в присланном unit-файле был виден API key. Значение не записано в журнал и не включается в репозиторий. Рекомендуется заменить/ротировать.
 
 **NEXT_ACTION:** заново загрузить существующую Qwen через Unsloth GUI, определить актуальный порт, затем отдельно повторить прямой jcode smoke test.
+
+
+---
+
+## 2026-10-31 — исследование интеграции Hermes ↔ Claude Code
+
+**Цель:** выяснить, что даёт официальная интеграция Hermes Agent и Claude Code, и нужна ли она для текущей архитектуры с одной Qwen.
+
+**Проверенные варианты по официальной документации NousResearch:**
+- `hermes import-agent claude-code`: перенос части инструкций, разрешений, MCP-серверов и skills из Claude Code в Hermes; это импорт настроек, не live-синхронизация.
+- Плагин `mcp-serve`: предоставляет Claude Code и другим MCP-клиентам выбранные функции Hermes, в том числе чтение/отправку сообщений через подключённые к Hermes платформы и дополнительные web/browser/vision/skills/TTS инструменты.
+- Anthropic provider: позволяет Hermes обращаться к Claude как к модели; меняет модельный backend, но не объединяет два agent-клиента.
+- ACP: подключает Hermes к ACP-совместимому редактору/хосту; это не прямой протокол координации Claude Code и Hermes.
+
+**Решение:** NOT CONFIGURED. Оставить агентов независимыми, поскольку текущая схема общей локальной Qwen уже работает, а Screenlife требует сравнивать самостоятельные маршруты. Один слот `--parallel 1` остаётся общим; интеграция не добавляет пропускной способности. При появлении конкретного сценария первым кандидатом для отдельного теста будет односторонний Claude Code → Hermes через MCP Serve с минимальным набором инструментов.
+
+**Источники:**
+- https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp
+- https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/import-from-other-agents.md
+- https://hermes-agent.nousresearch.com/docs/user-guide/features/acp
+- https://hermes-agent.nousresearch.com/docs/integrations/providers
+
+**Дополнительные записи:** `docs/integrations/hermes-claude-code.md`, `SESSION_BOOTSTRAP.md`, `CURRENT_STATE.md`, `NEXT_ACTION.md`.
+
+**Статус:** VERIFIED — документация изучена, решение зафиксировано; runtime-конфигурации не менялись.
