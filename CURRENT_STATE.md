@@ -66,3 +66,21 @@ SystemRescue translation: задача восстановления предыд
 - [EXPERIMENT_LOG.md](EXPERIMENT_LOG.md)
 - [NEXT_ACTION.md](NEXT_ACTION.md)
 - [Общий протокол GitHub-first](docs/operations/SHARED-MEMORY-PROTOCOL.md)
+
+
+---
+
+## Latest superseding state — 2026-10-31
+
+The older state blocks above contain historical snapshots and should not be treated as the current intended architecture. The latest verified configuration is:
+- One Unsloth llama-server and one Qwen3.5-9B-Q4_K_M model.
+- Unsloth API wrapper `127.0.0.1:8888`.
+- Context 160000; `--parallel 1`.
+- Hermes Custom OpenAI Chat Completions and Claude Code Anthropic-compatible API use the same Unsloth endpoint.
+- Hermes legacy local runtime is disabled; old port 18434 was absent in the last full check.
+- Unsloth API, Hermes CLI, Hermes Gateway and Claude Code status passed their respective checks on 2026-10-31.
+- Requests are serialized through one slot. PID and internal server port are dynamic.
+
+Hermes/Claude integration research: `docs/integrations/hermes-claude-code.md`. Decision: no additional MCP/ACP/import integration yet; keep agents independent for Screenlife testing.
+
+See `SESSION_BOOTSTRAP.md` for the authoritative recovery summary and `NEXT_ACTION.md` for pending work.
