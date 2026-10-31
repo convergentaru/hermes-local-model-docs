@@ -347,3 +347,36 @@ No files found for hermes-gateway.service.
 **Next diagnostic:** execute `hermes gateway status`, followed by read-only `systemctl --user status/cat` and `journalctl --user`. Do not install/start/reconfigure the Gateway until this is understood.
 
 Source: https://hermes-agent.nousresearch.com/docs/user-guide/messaging
+
+
+---
+
+## 2026-10-31 — definitive Hermes Gateway status from user systemd scope
+
+**Correction:** Earlier interpretation that Hermes Gateway was inactive was wrong. The earlier `systemctl` query omitted `--user` and queried the system manager, while this host's actual Gateway is installed as a user service.
+
+**User-provided evidence:**
+- `hermes gateway status`: `User gateway service is running`.
+- Unit loaded from `/home/oleg/.config/systemd/user/hermes-gateway.service`.
+- `systemctl --user status`: `active (running)`, `enabled`.
+- Started 2026-10-31 13:39:29 MSK; Main PID 1822.
+- systemd linger enabled.
+- Child processes included MCP server PID 4378 and MCP death supervisor PID 4379.
+- User unit inventory showed `hermes-gateway.service enabled` and `hermes-qwen35.service disabled`.
+
+**Application health warnings:**
+- Gateway startup says `No messaging platforms enabled.`
+- WhatsApp is enabled but no profile provides a bot credential; WhatsApp is not being served / not paired.
+- No environment user allowlists configured; platform defaults to pairing/allowlist policies.
+These are messaging-platform setup/availability warnings. They do not indicate that the Gateway daemon itself is stopped.
+
+**Historical inference error in prior Gateway journal:**
+At 13:35:54 the earlier Gateway process attempted provider `custom`, base URL `http://127.0.0.1:8888/v1`, model `Qwen3.5-9B-Q4_K_M`, and ended after 3 attempts with `APIConnectionError`. That process was stopped with SIGTERM at 13:38:58; a new Gateway process started at 13:39:29. The older connection failure occurred before the latest confirmed Unsloth direct API success and is not proof that the current endpoint is failing.
+
+**Status:**
+- Existing Hermes Gateway daemon: VERIFIED RUNNING as user service.
+- Gateway messaging platforms: OBSERVED NONE enabled; WhatsApp incomplete/unpaired.
+- Hermes Gateway → Unsloth fresh generation after current Unsloth startup: NOT YET VERIFIED.
+- No service start/restart, install, or unit modification was performed in this step.
+
+**Next:** one real one-shot Hermes CLI request through the running Gateway, using the already configured Custom provider, then record the exact response/error. Do not repeat system-scope service checks and do not restart the Gateway.
