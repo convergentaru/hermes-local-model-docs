@@ -20,26 +20,34 @@
 ## Единая память и текущая работа
 
 - [SESSION_BOOTSTRAP.md](SESSION_BOOTSTRAP.md) — короткая точка восстановления контекста после перерыва.
-- [AGENTS.md](AGENTS.md) — автоматически загружаемые инструкции для Hermes, OpenCode и jcode при работе в этом репозитории.
-
-- [Протокол общей памяти ChatGPT ↔ Hermes ↔ GitHub](docs/operations/SHARED-MEMORY-PROTOCOL.md) — обязателен перед продолжением старых задач.
+- [AGENTS.md](AGENTS.md) — инструкции для Hermes, OpenCode и jcode при работе в этом репозитории.
+- [Протокол общей памяти ChatGPT ↔ Hermes ↔ GitHub](docs/operations/SHARED-MEMORY-PROTOCOL.md).
 - [Текущее состояние локального AI-стека](CURRENT_STATE.md).
 - [Проверенные и исторические конфигурации](KNOWN_GOOD_CONFIGS.md).
 - [Журнал экспериментов и ошибок](EXPERIMENT_LOG.md).
 - [Архитектурные решения](DECISIONS.md).
-- [Следующее действие](NEXT_ACTION.md) — один конкретный шаг, с которого продолжать.
+- [Следующее действие](NEXT_ACTION.md).
 
+### Screenlife — два агента, одна модель
+
+- [Проект SCREENLIFE: два агента, одна модель](docs/screenlife/README.md).
+- [Повторный запуск сессии](docs/screenlife/RUNBOOK.md).
+- [Команды и конфигурация](docs/screenlife/COMMANDS.md).
+- [Производство и съёмка](docs/screenlife/PRODUCTION.md).
+- [Сессия 31 октября 2026](docs/screenlife/sessions/2026-10-31/README.md).
 
 ### Screenpipe
+
 - [Screenpipe + Hermes: локальная экранная память](docs/screenpipe/hermes-screenpipe-setup.md)
 - [Skill Screenpipe для Hermes](skills/screenpipe-hermes-memory/SKILL.md)
 
-
 ### Архитектура
+
 - [Архитектура текущего локального AI-стека](docs/architecture/current-local-ai-stack.md)
 
 ### Hermes
-- [Project Atlas: аудит проектов, долговременная память и синхронизация](docs/hermes/PROJECT-ATLAS-PROMPT.md) — короткая точка входа; полная пошаговая инструкция находится в `docs/hermes/project-atlas/START.md`.
+
+- [Project Atlas: аудит проектов, долговременная память и синхронизация](docs/hermes/PROJECT-ATLAS-PROMPT.md).
 - [Hermes Desktop: настройки, auxiliary-задачи и голос](docs/hermes/desktop-settings-and-voice.md)
 - [Пошаговый чек-лист Hermes Desktop](docs/hermes/desktop-practical-checklist.md)
 - [Главный setup-skill Robot Factory OS](skills/robot-factory-setup/SKILL.md)
@@ -48,6 +56,7 @@
 - [Skill компании агентов](skills/robot-factory-agent-company/SKILL.md)
 
 ### Повторяемая настройка (Hermes Skills)
+
 - [Установка и использование наших skills](docs/skills/install-hermes-skills.md)
 - [Готовый промпт для Hermes: установить skills из GitHub и проверить их](docs/hermes/prompt-install-and-test-from-github.md)
 - [Единая команда установки из GitHub](scripts/install-hermes-local-ai-skills.sh)
@@ -56,21 +65,26 @@
 - [Голосовой ввод и озвучивание](skills/hermes-voice-setup/SKILL.md)
 
 ### Unsloth
+
 - [Unsloth Desktop: общая библиотека, CUDA и собственный llama.cpp](docs/unsloth/studio-model-library-and-custom-llama-cpp.md)
 
 ### Голос
+
 - [Qwen3-ASR, STT и TTS: текущие результаты и план интеграции](docs/voice/qwen3-asr-and-hermes-voice.md)
 - [Первый разговор с Hermes Desktop: текст, микрофон и озвучивание](docs/voice/hermes-desktop-first-voice-test.md)
 
 ### Кодовые агенты
+
 - [Aider и Little-coder: установка, тесты, ограничения контекста](docs/coding-agents/aider-and-little-coder.md)
 
 ### Отчёты экспериментов
+
 - [10 октября 2026: Unsloth + Qwen3.5-4B](docs/experiments/2026-10-10-unsloth-qwen35-4b.md)
 - [10 октября 2026: диагностика портов Unsloth и llama-server](docs/experiments/2026-10-10-unsloth-port-routing-diagnosis.md)
 - [9–10 октября 2026: Qwen3.6-35B и Aider](docs/experiments/2026-10-10-qwen36-35b-context-and-aider.md)
 
 ### Ранее созданные документы
+
 - [Выбор локальной модели для Hermes](hermes-local-model-selection-and-setup.md)
 - [Установка Qwen3.6-35B-A3B](qwen36-35b-a3b-ubuntu-install.md)
 - [Дорожная карта локальной AI-лаборатории: LEGO/CAD/анализ крыш](local-ai-lab-lego-cad-roof-vision-roadmap.md)
@@ -78,6 +92,7 @@
 - [Объединение библиотеки моделей и запуск Unsloth](scripts/unify-model-library-and-start-unsloth.sh)
 
 ### Диагностика неполадок
+
 - [Восстановление Hermes Desktop после Custom HTTP 401 (Unsloth)](docs/troubleshooting/2026-10-10-hermes-custom-401-unsloth.md)
 
 ## Проверенные результаты
