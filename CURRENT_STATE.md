@@ -108,3 +108,16 @@ Shortlist for a future controlled evaluation:
 - **Qwen3.6-35B-A3B UD-IQ2_XXS (10.8 GB)** — model used in an earlier setup according to project history; 35B total / 3B active MoE. Local file presence is not verified and the 2-bit quant is a quality compromise.
 
 Use GGUF, not NVFP4, on RTX 3060. Do not delete the working 9B baseline, run two model servers at once, or lower the 160K target without a separate decision. Details: `docs/model-selection/2026-10-31-upgrade-candidates.md`.
+
+
+---
+
+## User priority update — audio work before larger model (2026-10-31)
+
+The user has explicitly chosen to work on audio/voice first and postpone downloading a larger model until afterwards.
+
+No model change or download is approved now. The current known-good Qwen3.5-9B setup remains the baseline; context 160K and one shared llama-server remain unchanged.
+
+The 27B candidate is considered a memory-fit risk on RTX 3060 12 GB VRAM + approximately 12 GB system RAM, especially with a 160K context. A 13.1 GB GGUF weight file does not include KV cache and runtime overhead. Reassess only after audio work is complete, then inspect available memory and the existing local Qwen3.6-35B-A3B file before considering a download.
+
+Voice work notes: `docs/voice/qwen3-asr-and-hermes-voice.md`. Current next-step ordering: `NEXT_ACTION.md`.
