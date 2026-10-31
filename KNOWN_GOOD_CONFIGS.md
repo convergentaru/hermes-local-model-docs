@@ -217,3 +217,12 @@ After the user executed `systemctl --user disable --now llama-server.service`, o
 - exact `llama-server` process count = 1.
 
 This is the verified state for the one-model/one-server architecture. Legacy service files and presets are preserved. Post-cleanup API smoke test is still pending.
+
+
+## 17. Unsloth health after legacy router shutdown — VERIFIED 2026-10-31
+
+After disabling the old Hermes router, the public Unsloth wrapper returned the model inventory with `Qwen3.5-9B-Q4_K_M` marked `loaded`. A real Chat Completions request returned `UNSLOTH_AFTER_ROUTER_STOP_OK`.
+
+This confirms the legacy router shutdown did not break the Unsloth service. The correct wrapper credential came from the existing Hermes environment variable; the internal llama-server key file had returned 401 and must not be used for this public wrapper check.
+
+Combined with successful Hermes and Claude Code smoke tests, the runtime shared-model architecture is verified. Clean reboot/autostart remains unverified.
