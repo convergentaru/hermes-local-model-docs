@@ -435,3 +435,44 @@ Crunched for 21s · done 14:36
 - Claude Code via `unsloth start claude --no-serve` → `CLAUDE_UNSLOTH_OK`.
 
 **Status:** VERIFIED for both client generation paths. This does not by itself establish that the exact same single llama-server process was the only inference process after both launches; perform one read-only exact-name process inventory next. Do not restart services or relaunch models.
+
+
+---
+
+## 2026-10-31 — final inventory found two llama-server processes (one-server invariant not met)
+
+**User command:**
+```bash
+pgrep -xc llama-server
+for pid in $(pgrep -x llama-server); do
+  ps -ww -p "$pid" -o pid=,ppid=,comm=,args=
+done
+```
+
+**Observed count:** 2.
+
+### Process A — legacy Hermes model server
+- PID: 1823.
+- PPID: 1645 (user systemd manager).
+- Executable: `/home/oleg/.hermes/tools/llamacpp-cuda-11370-linux-x64/llama-server`.
+- Port argument: `18434`.
+- Arguments include `--models-max 1 --models-autoload`, `--metrics`, `--slots`, `--no-ui`, and Hermes preset file `/home/oleg/.hermes/runtimes/llamacpp/presets.ini`.
+- Command line includes a credential argument; its value is intentionally omitted from project documentation.
+- Likely legacy Hermes model-management server, but actual owning unit and loaded-model state are not yet verified.
+
+### Process B — intended Unsloth server
+- PID: 10358.
+- PPID: 10257.
+- Executable: `/home/oleg/.unsloth/llama.cpp/llama-server`.
+- Model: `/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf`.
+- Internal port: `53815` (dynamic).
+- `--parallel 1`; context `-c 160000`.
+- This is the currently verified server used by Unsloth API, Hermes CLI and Claude Code.
+
+**Conclusion:** two server processes are running. This disproves the earlier assumption that the legacy Hermes server was stopped. It does not yet prove two model weight sets are currently loaded: process A uses model presets with `--models-autoload`, and its actual loaded-model state remains unknown.
+
+**Next read-only diagnosis:**
+- Run `systemctl --user status 1823 --no-pager -l` to map the PID to its owning unit. systemd's `status PID` syntax is documented to show the unit containing that PID.
+- Inspect the identified unit status/cat/journal.
+- Check current model state on legacy port 18434 without printing or copying the API key.
+- Do not kill PID 1823 or stop the unit yet. Preserve PID 10358/Unsloth.
