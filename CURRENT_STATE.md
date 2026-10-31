@@ -257,3 +257,36 @@ Architecture checkpoint:
 - One inference server/model and process inventory should be confirmed once after Claude attachment.
 
 The Hermes CLI output returned to the interactive prompt after showing the resumed one-shot session. Do not treat this as a Gateway failure; the model response itself succeeded.
+
+
+---
+
+## Claude Code → shared Unsloth functional smoke test — 2026-10-31
+
+**Status: VERIFIED.**
+
+The user launched Claude Code through the existing Unsloth-managed service using:
+```bash
+unsloth start claude --no-serve
+```
+
+Claude Code reported:
+- Version: `2.1.286`.
+- Model label: `Qwen3.5-9B-Q4_K_M`.
+- Working directory: `/home/oleg`.
+- User prompt: `Ответь строго одной строкой: CLAUDE_UNSLOTH_OK`.
+- Exact model response: `CLAUDE_UNSLOTH_OK`.
+- Completion: 14:36; ~21 seconds.
+
+This is a successful functional smoke test through the Unsloth no-serve connection path. Together with the previously successful Hermes CLI Custom-provider test, both independent agent clients have now returned their exact expected strings using Qwen3.5-9B-Q4_K_M.
+
+### Current acceptance matrix
+- Unsloth model load and direct OpenAI-compatible API: VERIFIED.
+- Hermes CLI Custom → Unsloth: VERIFIED.
+- Existing Hermes Gateway user service: VERIFIED RUNNING.
+- Claude Code 2.1.286 via `unsloth start claude --no-serve`: VERIFIED for text generation.
+- Messaging platforms through Gateway: NOT CONFIGURED / NOT TESTED.
+- One-and-only-one inference server at this exact moment: final process inventory pending.
+- Clean reboot and full ordered startup: NOT YET TESTED.
+
+Next: one read-only process inventory using exact process name `llama-server`; avoid broad pgrep patterns that match Hermes wrapper processes. Then complete the final startup runbook with a clear preflight and recovery order. No restart is required now.
