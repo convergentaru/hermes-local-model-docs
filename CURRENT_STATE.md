@@ -185,3 +185,18 @@ The old `llama-server.service` is the legacy Hermes model server and must remain
 The existing Hermes Gateway is not currently verified as running. Its unit definition and journal have not yet been inspected in this checkpoint. Next action is read-only inspection of `systemctl status`, `systemctl cat` and `journalctl` for `hermes-gateway.service`; do not start or edit it before examining the evidence.
 
 This checkpoint supersedes the earlier statement that the Gateway was active at the time of a previous test. Runtime state is time-dependent; preserve earlier successful tests as historical evidence, not as current status.
+
+
+---
+
+## Correction — Gateway unit lookup scope, 2026-10-31
+
+The user ran `systemctl status/cat/journalctl` in the **system** scope (without `--user`). All three outputs showed that `hermes-gateway.service` is not installed/known in the system manager:
+- `Unit hermes-gateway.service could not be found.`
+- `No files found for hermes-gateway.service.`
+- No journal entries for that system-scope unit.
+
+This does **not** establish that Hermes Gateway is absent or stopped globally. The Linux Hermes documentation describes the default install as a per-user systemd service at `~/.config/systemd/user/hermes-gateway.service`; system scope is an explicit `--system` install. The default CLI command `hermes gateway status` inspects the selected installation's service. Therefore current Gateway installation/scope is **UNKNOWN**, and the previous unqualified `systemctl is-active` outputs must not be interpreted as a confirmed Gateway service state until the correct scope is checked.
+
+Next: run the documented read-only `hermes gateway status`, then inspect `systemctl --user` status/unit/journal. Do not install, start, or edit anything until these checks identify the current service state and existing files.
+Official docs: https://hermes-agent.nousresearch.com/docs/user-guide/messaging
