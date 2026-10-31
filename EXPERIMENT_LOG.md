@@ -125,3 +125,27 @@ The Hermes report's explanation of the 70K limit is not accepted as fact:
 The report also contains a likely timestamp data issue: session ID prefix `20261024` is paired with a claimed UTC start in 2024. Read the raw record.
 
 Detailed evidence, version caveats and recovery plan: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
+
+
+---
+
+## 2026-10-31 — исследование перехода с Qwen3.5-9B на более крупную модель
+
+**Цель:** подобрать модель для одного общего Unsloth llama-server, которым пользуются Hermes и Claude Code.
+
+**Ограничения:** RTX 3060 12 GB VRAM; системная RAM около 12 GB; swap 4 GB; текущая рабочая архитектура — одна модель, один сервер, два независимых клиента, `--parallel 1`; целевой контекст — 160K. Действующую 9B конфигурацию и файл не трогать.
+
+**Новый кандидат из актуальных рекомендаций Unsloth:** Qwen3.8-27B. Официальная страница Unsloth указывает поддержку Hermes Agent и Claude Code, 27B, native 256K context, agentic coding и nested tool calls. Quant-файлы: UD-IQ3_XXS 10.9 GB, UD-Q3_K_XL 13.1 GB, UD-Q4_K_XL 17.6 GB. Рекомендованный 4-bit вариант требует порядка 17–19 GB total RAM+VRAM; фактическая пригодность на данном хосте зависит от available memory, KV cache и сохранения 160K контекста. Для RTX 3060 выбирать GGUF, не NVFP4 (Unsloth указывает NVFP4 для NVIDIA Blackwell-class устройств).
+
+**Кандидат из ранее использовавшейся коллекции:** Qwen3.6-35B-A3B, 35B total / 3B active, GGUF Unsloth UD-IQ2_XXS около 10.8 GB. Пользователь ранее уже использовал эту модель; наличие файла на диске сейчас не перепроверялось. Двухбитное квантование — существенный компромисс качества.
+
+**Предварительный выбор:** Qwen3.8-27B UD-Q3_K_XL как новая quality-oriented модель для проверки; сначала read-only инвентаризировать локальное наличие Qwen3.6-35B-A3B, чтобы не скачивать то, что уже есть.
+
+**Решение:** RESEARCHED / NOT INSTALLED. Ни одна модель не загружалась, текущая модель не выгружалась, серверы не перезапускались, контекст и маршрутизация не менялись.
+
+**План проверки:** одна модель за раз; сохранить 9B baseline; не снижать 160K без отдельного решения; проверить actual model placement, memory peak, context, speed (prefill и generation отдельно), tool-call reliability и одинаковые сценарии Hermes/Claude Code.
+
+Подробная записка: `docs/model-selection/2026-10-31-upgrade-candidates.md`.
+Источники: https://unsloth.ai/models/qwen3.8-27b ; https://huggingface.co/unsloth/Qwen3.8-27B-GGUF ; https://huggingface.co/Qwen/Qwen3.6-35B-A3B ; https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF
+
+**Статус:** VERIFIED для фактов из документации и исторической конфигурации; actual local file inventory и real performance на RTX 3060 ещё не проверялись.
