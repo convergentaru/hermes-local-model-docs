@@ -320,3 +320,19 @@ Read-only authenticated queries to port 18434 returned seven preset entries, all
 Only the Unsloth server PID 10358 has Qwen3.5-9B loaded. Hermes CLI and Claude Code passed independent generation tests via Unsloth, and Hermes Gateway is a separate active user service without a declared dependency on the legacy router.
 
 Next planned reversible action: `systemctl --user disable --now llama-server.service`. This action is not yet performed. It preserves the unit file and model presets but stops the empty router and prevents automatic startup. Then verify Gateway still active and exact llama-server count is 1. Keep Unsloth running.
+
+
+---
+
+## One-server state achieved — 2026-10-31
+
+The user successfully executed `systemctl --user disable --now llama-server.service` against the empty legacy Hermes model router.
+
+Post-change results:
+- Legacy `llama-server.service`: inactive and disabled.
+- `hermes-gateway.service`: active.
+- `pgrep -xc llama-server`: exactly 1.
+
+The remaining inference process is the Unsloth-managed Qwen3.5-9B server. The old unit/presets remain intact; no model files were removed. The service change is reversible.
+
+A fresh direct Unsloth API generation after this cleanup remains to be checked. Both Hermes and Claude Code have previously passed independent inference tests. The manual startup sequence is recorded; real cold-reboot acceptance is not yet complete. No dedicated systemd Unsloth auto-start has been created.
