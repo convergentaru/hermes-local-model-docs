@@ -522,3 +522,31 @@ https://github.com/unslothai/unsloth/blob/main/.github/scripts/serve-unsloth-run
 Use the already-configured `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` from `~/.hermes/.env`, whose presence has been confirmed and which is the credential configured for Hermes Custom → Unsloth. Never print it.
 
 One next test: GET `/v1/models` and send one `/v1/chat/completions` request through port 8888 with that existing key. If it succeeds, post-cleanup Unsloth health is VERIFIED. Do not change keys, restart services, or repeat the Hermes/Claude client probes.
+
+
+---
+
+## Current recovery phase complete — prepare startup checklist (2026-10-31)
+
+The post-cleanup Unsloth API test passed:
+- Qwen3.5-9B-Q4_K_M reported `loaded` on `127.0.0.1:8888/v1`.
+- Chat Completions returned exact expected response `UNSLOTH_AFTER_ROUTER_STOP_OK`.
+
+Combined confirmed state:
+- Legacy Hermes router `llama-server.service`: inactive/disabled.
+- Exactly one `llama-server` process.
+- Hermes Gateway user service: active/enabled; linger enabled.
+- Hermes CLI Custom provider: passed `HERMES_UNSLOTH_OK`.
+- Claude Code v2.1.286, `unsloth start claude --no-serve`: passed `CLAUDE_UNSLOTH_OK`.
+- Unsloth after router cleanup: passed `UNSLOTH_AFTER_ROUTER_STOP_OK`.
+
+**Runtime recovery acceptance is complete.** No further diagnostic probes are required now.
+
+### Next project task
+Finalize and review a concise manual startup checklist from the known-good sequence. Keep separate:
+1. Gateway's existing user-service autostart (enabled; linger enabled).
+2. Unsloth model server startup via the exact working `unsloth run` command.
+3. Hermes CLI Custom-provider usage.
+4. Claude Code attachment via `unsloth start claude --no-serve`.
+
+A true cold-reboot test remains pending. There is no approved/demonstrated Unsloth systemd autostart unit. Do not create one without researching/confirming the Unsloth CLI foreground and shutdown lifecycle. The user may choose a controlled reboot test later; until then label the runbook **manual startup verified at runtime, reboot not tested**.
