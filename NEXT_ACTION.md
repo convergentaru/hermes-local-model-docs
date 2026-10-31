@@ -182,3 +182,19 @@ Run the protocol in `docs/operations/HOME-DIRECTORY-AUDIT.md`:
 4. Bring the reports back for comparison and sanitized GitHub publication.
 
 Do not inspect sensitive contents or make changes. Do not run both full audits concurrently while `--parallel 1` is configured. This task does not authorize changing model context, slots or server configuration.
+
+
+---
+
+## User-requested long-running agent pilot — HOME inventory (2026-10-31)
+
+Use `docs/operations/LONG-RUNNING-AGENT-WORK-PAPERCLIP.md`:
+1. Hermes performs a measured, read-only storage/filesystem inventory with progress checkpoints.
+2. Claude Code performs a complementary read-only development-project/Git workspace inventory.
+3. Run agents sequentially while Unsloth remains `--parallel 1`.
+4. Exchange the two reports and have each agent cross-review the other.
+5. Produce a sanitized joint report and a human-reviewed action backlog; do not perform cleanup.
+
+Paperclip research confirms built-in Hermes and Claude adapters with heartbeats and session persistence, but Paperclip is not verified installed/configured on this host. Before overnight use, verify local installation/version, test both adapters against the existing custom Unsloth/Qwen endpoint, and verify Stop/resume. Do not switch providers or start extra model servers.
+
+The separate audio-first priority still applies before any larger-model download. No model upgrade is part of this audit.
