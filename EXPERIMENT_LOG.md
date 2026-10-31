@@ -149,3 +149,19 @@ Detailed evidence, version caveats and recovery plan: https://github.com/converg
 Источники: https://unsloth.ai/models/qwen3.8-27b ; https://huggingface.co/unsloth/Qwen3.8-27B-GGUF ; https://huggingface.co/Qwen/Qwen3.6-35B-A3B ; https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF
 
 **Статус:** VERIFIED для фактов из документации и исторической конфигурации; actual local file inventory и real performance на RTX 3060 ещё не проверялись.
+
+
+---
+
+## 2026-10-31 — пользователь установил приоритет: аудио прежде новой модели
+
+**Решение пользователя:** сначала завершить аудио/voice работу; к скачиванию и испытанию более крупной модели возвращаться только после этого.
+
+**Решение по конфигурации:**
+- Оставить работающую Qwen3.5-9B как baseline.
+- Не скачивать Qwen3.8-27B сейчас.
+- Не менять модель, endpoint, context 160K или число серверов.
+- Причина осторожности: Qwen3.8-27B UD-Q3_K_XL имеет GGUF около 13.1 GB; файл весов сам по себе не включает KV cache, рабочие буферы и overhead. На RTX 3060 12 GB VRAM и около 12 GB системной RAM сохранение контекста 160K может оказаться нереалистичным без детального memory placement.
+- Модельный вопрос вернётся после аудио. Тогда сначала проверить свободные ресурсы и локальный файл прежней Qwen3.6-35B-A3B, а не скачивать вслепую.
+
+**Статус:** DECIDED / NO RUNTIME CHANGE. Приоритет добавлен в voice notes, CURRENT_STATE и NEXT_ACTION.
