@@ -198,3 +198,16 @@ Use `docs/operations/LONG-RUNNING-AGENT-WORK-PAPERCLIP.md`:
 Paperclip research confirms built-in Hermes and Claude adapters with heartbeats and session persistence, but Paperclip is not verified installed/configured on this host. Before overnight use, verify local installation/version, test both adapters against the existing custom Unsloth/Qwen endpoint, and verify Stop/resume. Do not switch providers or start extra model servers.
 
 The separate audio-first priority still applies before any larger-model download. No model upgrade is part of this audit.
+
+
+---
+
+## Copy/paste prompts ready — long-running HOME audit
+
+Detailed role split, multi-phase work and safety gates:
+- `docs/operations/HOME-AUDIT-LONG-TASK-PROMPTS.md` — Task 1 Hermes storage/filesystem audit; Task 2 Claude Code project/Git workspace audit; Task 3 cross-review.
+- `docs/operations/LONG-RUNNING-AGENT-WORK-PAPERCLIP.md` — Paperclip heartbeat design, adapter integration questions, sequential scheduling under `--parallel 1`, overnight acceptance gate.
+
+No local scan has been run and no agent has been launched by ChatGPT. The user needs to paste Task 1 into a fresh Hermes session, then Task 2 into a fresh Claude Code session. Do not run both full tasks simultaneously: one Qwen server slot serializes them. After reports arrive, perform reciprocal review.
+
+Paperclip unattended/overnight configuration remains **NOT ENABLED** until adapter smoke tests confirm that both agents stay on the existing custom Unsloth/Qwen endpoint, sessions resume across heartbeats, and Stop controls work.
