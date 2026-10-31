@@ -121,3 +121,22 @@ Research note: `docs/model-selection/2026-10-31-upgrade-candidates.md`.
 Before downloading a larger model, perform a read-only inventory of the user's existing Unsloth model collection, especially the previously used `Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf`. If the file exists, validate it and consider a one-model-at-a-time trial. Otherwise consider Qwen3.8-27B `UD-Q3_K_XL` as the new primary candidate.
 
 No configuration change is authorized by this research. Keep the working Qwen3.5-9B baseline intact, one server only, and preserve the 160K target context. Acceptance must include real memory placement, 160K functional stability, tool calling and identical Hermes/Claude Code tests. Do not assume larger parameter count automatically means better speed or quality.
+
+
+---
+
+## New user priority — audio first, model upgrade later (2026-10-31)
+
+The user explicitly set this order:
+1. **Audio/voice work first.** Continue with the audio task as the next active priority, using the existing voice documentation and the user's next concrete direction. Do not assume which exact voice subtask they mean without seeing the work context.
+2. **Larger model only afterwards.** The Qwen3.8-27B / Qwen3.6-35B-A3B investigation is postponed until audio work is addressed. No download, no model swap and no server changes now.
+
+Why defer the 27B model:
+- RTX 3060 has 12 GB VRAM; system RAM is around 12 GB with 4 GB swap.
+- A 13.1 GB Qwen3.8-27B GGUF file is only the weights, not total runtime memory. KV cache for 160K context and server/desktop overhead also need memory.
+- The user explicitly does not want another oversized model attempt that fails to load.
+- Preserve Qwen3.5-9B known-good setup and the 160K target context.
+
+After audio: inspect actual free RAM/VRAM, inventory the existing collection for `Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf`, then decide whether to test that existing file or download a separate Qwen3.8-27B quant. Never overwrite the 9B baseline or run two large servers simultaneously.
+
+Separate pending work remains: verify the eight SystemRescue translations reported by Hermes. Do not treat that task as completed until the actual files are located and reviewed.
