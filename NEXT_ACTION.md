@@ -322,3 +322,38 @@ The Gateway daemon is active and enabled as a user service, but its logs say no 
 Verify Claude Code against the already-running Unsloth endpoint, without starting another inference server. The historical successful route used `unsloth start claude --no-serve`, but first rely on the installed CLI's exact supported invocation / existing known-good profile and retain the current Unsloth process. After Claude returns a real model response, inspect the process list once and confirm there is only one Qwen inference server.
 
 Do not repeat Gateway diagnostics, restart its service, start legacy `llama-server.service`, or rerun the successful Hermes probe.
+
+
+---
+
+## Latest active step — final one-server process inventory (2026-10-31)
+
+### Newly verified
+Claude Code v2.1.286 was launched by the user with:
+`unsloth start claude --no-serve`.
+
+It reported model `Qwen3.5-9B-Q4_K_M` and returned the exact expected response `CLAUDE_UNSLOTH_OK`.
+
+Hermes CLI had already returned exact expected response `HERMES_UNSLOTH_OK` with restored model `Qwen3.5-9B-Q4_K_M (custom:unsloth-qwen-160k)`.
+
+Thus both clients have passed generation smoke tests. No more Gateway checks or Hermes probes are needed.
+
+### One remaining read-only check
+Count and identify actual processes whose executable name is exactly `llama-server`. Do not use a broad pattern such as `pgrep -af hermes|llama-server`, because it matches the long Hermes Python Gateway launcher command and creates huge noisy output.
+
+Run:
+
+```bash
+echo "=== LLAMA SERVER COUNT ==="
+pgrep -xc llama-server || true
+
+echo
+echo "=== LLAMA SERVER PROCESS DETAILS ==="
+for pid in $(pgrep -x llama-server); do
+  ps -ww -p "$pid" -o pid=,ppid=,comm=,args=
+done
+```
+
+Expected: one llama-server process for the loaded Qwen model. If count is zero or greater than one, do not start/stop anything; return the output for diagnosis.
+
+After this check, consolidate the verified steps into the startup runbook. A true reboot/startup acceptance test remains separate and is not complete until performed.
