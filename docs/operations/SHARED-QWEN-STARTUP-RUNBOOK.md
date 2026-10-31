@@ -329,3 +329,97 @@ This is a post-cleanup test after the legacy Hermes router was stopped/disabled.
 - Unsloth systemd/boot autostart: not configured and not claimed.
 
 Do not add an Unsloth systemd unit until its supported foreground/lifecycle management is researched and tested. Next work is to present/review the concise manual startup checklist; optionally validate it with a controlled reboot at the user's convenience.
+
+
+---
+
+## Manual startup checklist — current verified runtime sequence (2026-10-31)
+
+**Purpose:** start the shared local model for Hermes and Claude Code after login/reboot without launching a second inference server. This sequence is based on commands that were executed successfully. A cold reboot has not yet been tested.
+
+### 1. Confirm legacy router stays disabled
+
+```bash
+systemctl --user is-active llama-server.service || true
+systemctl --user is-enabled llama-server.service || true
+```
+
+Expected: `inactive` and `disabled`. Do not enable this legacy port-18434 service.
+
+### 2. Start the model through Unsloth CLI
+
+Open a dedicated terminal and run:
+
+```bash
+unsloth run \
+  --model "/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf" \
+  --context-length 160000 \
+  --gpu-memory-mode manual \
+  --parallel 1 \
+  --port 8888 \
+  --host 127.0.0.1 \
+  --disable-tools
+```
+
+Keep this terminal/process running while using the local agents. Do not start a standalone `llama-server` and do not close this terminal during the session.
+
+Expected:
+- Qwen3.5-9B-Q4_K_M is loaded.
+- Unsloth wrapper listens at `127.0.0.1:8888`.
+- Clients use `http://127.0.0.1:8888/v1`.
+- Internal llama-server port is dynamically assigned; do not hardcode it.
+- Context is 160000; parallel is 1.
+
+### 3. Check the existing Hermes Gateway
+
+The Gateway is already installed as a user service, enabled, and systemd linger is enabled. It normally starts with the user manager and survives logout. Check:
+
+```bash
+hermes gateway status
+```
+
+Expected: `User gateway service is running`. Do not reinstall or restart it as part of ordinary model startup. Current gateway message-platform adapters are not configured; that is separate from local inference.
+
+### 4. Verify Hermes Custom provider (optional quick functional check)
+
+Hermes Custom is configured for:
+- base URL `http://127.0.0.1:8888/v1`;
+- model `Qwen3.5-9B-Q4_K_M`;
+- context 160000;
+- API mode `chat_completions`.
+
+Previously verified exact one-shot test:
+
+```bash
+hermes chat --oneshot -q "Ответь строго одной строкой: HERMES_UNSLOTH_OK"
+```
+
+Expected model response: `HERMES_UNSLOTH_OK`.
+
+### 5. Launch Claude Code as a client of the existing server
+
+```bash
+unsloth start claude --no-serve
+```
+
+The `--no-serve` mode was verified with Claude Code 2.1.286. It must attach to the already-running Unsloth server, not launch another model server.
+
+Previously verified prompt:
+`Ответь строго одной строкой: CLAUDE_UNSLOTH_OK`.
+
+### 6. Final process check
+
+```bash
+echo "=== LLAMA SERVER COUNT ==="
+pgrep -xc llama-server || true
+```
+
+Expected: `1`. If the count is 0 or greater than 1, do not start/stop arbitrary processes; inspect the exact process command lines and unit ownership first.
+
+### Known reboot/autostart limitations
+
+- Hermes Gateway: user service enabled; linger enabled.
+- Legacy Hermes router: user service disabled; do not re-enable.
+- Unsloth model server: currently started manually with `unsloth run`; a dedicated systemd unit is not configured.
+- Clean reboot acceptance: not yet performed.
+- Therefore the current reliable procedure is **manual Unsloth startup**, followed by the two client connections. Do not claim that the model automatically starts at boot.
