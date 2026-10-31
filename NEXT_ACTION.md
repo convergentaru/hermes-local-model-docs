@@ -82,3 +82,18 @@
 ### Вывод для следующего этапа
 
 Проверять архитектуру «одна копия Qwen + два slots + два клиента», а не включать загрузку нескольких моделей. Сначала только зафиксировать фактические процессы, model path, endpoints, `n_parallel` и ответ `/slots`; затем отдельно согласовать короткий тест двух независимых запросов. Историю и tool state Hermes и Claude Code держать раздельно.
+
+
+---
+
+## Latest superseding note — 2026-10-31
+
+Older items proposing a new two-server/two-agent slots investigation are historical and have been superseded by the successful shared-server setup recorded in `SESSION_BOOTSTRAP.md`. Do not reopen that work unless a new failure or requirement appears.
+
+### Current next action
+1. Recover the prior Hermes SystemRescue translation session using `session_search` for `SystemRescue`, `systemrescue-help-original`, translation and Russian help ISO.
+2. Check actual `/usage` and compression telemetry; do not repeat the unsupported claim of a hard 70K context cap.
+3. Do not rerun translation until the previous session/result has been checked.
+
+### Hermes ↔ Claude Code
+Research is recorded in `docs/integrations/hermes-claude-code.md`. No additional integration is planned now. Keep the two clients independent for Screenlife comparisons; revisit one-way MCP Serve only for a concrete use case.
