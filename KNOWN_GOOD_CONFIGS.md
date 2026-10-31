@@ -121,3 +121,25 @@ The config is pointed at the correct Unsloth API. This alone does not prove the 
 ## 9. Legacy Hermes model service
 
 Latest observed status: `llama-server.service = inactive`. Keep it inactive while Unsloth owns the single Qwen inference server. Do not start it as part of Hermes Gateway recovery.
+
+
+## 10. Existing Hermes Gateway — user service confirmed 2026-10-31
+
+**Status:** VERIFIED RUNNING as a user-scope service.
+
+- CLI: `hermes gateway status` reported `User gateway service is running`.
+- Unit: `/home/oleg/.config/systemd/user/hermes-gateway.service`.
+- `systemctl --user`: active (running), enabled.
+- Main PID: 1822 in the observed run.
+- systemd linger: enabled.
+- MCP child processes were present.
+
+**Important:** `systemctl status hermes-gateway.service` without `--user` checks the system manager and returned unit-not-found. It must not be used to infer the status of this user-installed Gateway.
+
+Gateway process health and messaging-platform readiness are separate:
+- The daemon is running.
+- Startup log says no messaging platforms are enabled.
+- WhatsApp lacks a bot credential and is not paired.
+- No env allowlists are configured; the documented pairing policy remains in effect.
+
+Do not reinstall or restart this working service as part of the shared-model recovery. The next test is a fresh Hermes one-shot request through the existing Gateway.
