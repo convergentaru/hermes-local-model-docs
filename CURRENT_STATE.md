@@ -404,3 +404,26 @@ A post-cleanup direct API probe returned HTTP 401 because it used the internal k
 Unsloth's own CI helper extracts the public wrapper API key from the `unsloth run` banner (`API Key:`, typically `sk-unsloth-...`) and uses it for `/v1/models`. The configured Hermes wrapper key is `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` in `~/.hermes/.env`; use that existing value without displaying it.
 
 Post-cleanup direct API verification remains pending, not failed at model generation level.
+
+
+---
+
+## Post-cleanup Unsloth API generation — VERIFIED 2026-10-31
+
+After stopping/disabling the legacy Hermes router, the user ran an authenticated read-only model inventory and generation request against the public Unsloth wrapper at `127.0.0.1:8888/v1`, using the existing Hermes Custom provider key from `~/.hermes/.env` (the key value was not printed).
+
+Observed:
+- `GET /v1/models` succeeded.
+- `Qwen3.5-9B-Q4_K_M`: `loaded`.
+- Other returned presets: unloaded.
+- `POST /v1/chat/completions` returned exact expected response: `UNSLOTH_AFTER_ROUTER_STOP_OK`.
+
+This verifies that the intended Unsloth model and external API remained fully functional after the legacy router was disabled. Together with previous successful tests:
+- Hermes CLI Custom → Unsloth: VERIFIED (`HERMES_UNSLOTH_OK`).
+- Claude Code v2.1.286 via `unsloth start claude --no-serve` → Unsloth: VERIFIED (`CLAUDE_UNSLOTH_OK`).
+- Gateway user service: active.
+- Legacy router service: inactive/disabled.
+- Exact llama-server process count after cleanup: 1.
+
+### Startup sequence status
+The known-good manual launch command is documented. Hermes Gateway is enabled as a user service and linger is enabled. Unsloth itself was started manually via `unsloth run`; a clean reboot test and a dedicated automatic Unsloth service have **not** been performed/configured. Do not claim boot-autostart is complete until tested.
