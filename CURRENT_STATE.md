@@ -95,3 +95,16 @@ Hermes restored prior session IDs and reports that the remaining eight help file
 The old statement that Qwen3.5-9B has an inherent 70K hard context limit is unsupported. Cumulative session token counters must not be mistaken for the last prompt size. The exact compression-ceiling message indicates a time-bounded compression operation in current Hermes source, not a model context ceiling; the historical Hermes build must still be matched to source.
 
 Canonical detailed audit: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
+
+
+---
+
+## Model upgrade research — candidates only (2026-10-31)
+
+No runtime change. The active/last verified setup remains one Qwen3.5-9B model on one Unsloth llama-server, shared by Hermes and Claude Code, context 160K, `--parallel 1`.
+
+Shortlist for a future controlled evaluation:
+- **Qwen3.8-27B UD-Q3_K_XL (13.1 GB)** — current Unsloth recommendation with direct Hermes and Claude Code integration instructions; 27B dense, 256K native context, agentic coding / nested tool calls. Memory fit at 160K has not been tested.
+- **Qwen3.6-35B-A3B UD-IQ2_XXS (10.8 GB)** — model used in an earlier setup according to project history; 35B total / 3B active MoE. Local file presence is not verified and the 2-bit quant is a quality compromise.
+
+Use GGUF, not NVFP4, on RTX 3060. Do not delete the working 9B baseline, run two model servers at once, or lower the 160K target without a separate decision. Details: `docs/model-selection/2026-10-31-upgrade-candidates.md`.
