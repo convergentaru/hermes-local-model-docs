@@ -357,3 +357,54 @@ done
 Expected: one llama-server process for the loaded Qwen model. If count is zero or greater than one, do not start/stop anything; return the output for diagnosis.
 
 After this check, consolidate the verified steps into the startup runbook. A true reboot/startup acceptance test remains separate and is not complete until performed.
+
+
+---
+
+## Latest active task — identify and retire the legacy Hermes llama-server safely (2026-10-31)
+
+### Current verified result
+Exact-name inventory returned **2** active `llama-server` processes:
+- PID 1823, port 18434, Hermes bundled llama.cpp, Hermes presets and `--models-autoload` (legacy server).
+- PID 10358, internal port 53815, Unsloth llama.cpp serving Qwen3.5-9B-Q4_K_M with context 160K (intended server).
+
+Both Hermes CLI and Claude Code have passed functional requests through Unsloth. However the one-server process invariant has not been achieved.
+
+### Important uncertainty
+PID 1823 is a model-management server. Its process presence alone does not prove a Qwen model is currently loaded. It is a child of the user systemd manager. The user-unit inventory previously showed `hermes-qwen35.service disabled`, but disabled does not mean inactive. The actual owning unit is not yet established.
+
+### One next diagnostic block — read-only
+Use systemd's PID status lookup to identify the exact owning unit:
+
+```bash
+echo "=== UNIT CONTAINING PID 1823 ==="
+systemctl --user status 1823 --no-pager -l
+
+echo
+echo "=== LEGACY QWEN SERVICE STATUS ==="
+systemctl --user status hermes-qwen35.service --no-pager -l
+
+echo
+echo "=== LEGACY SERVICE PROPERTIES ==="
+systemctl --user show hermes-qwen35.service -p LoadState -p ActiveState -p SubState -p MainPID -p FragmentPath
+
+echo
+echo "=== PID 1823 CGROUP ==="
+cat /proc/1823/cgroup
+
+echo
+echo "=== LEGACY SERVICE JOURNAL ==="
+journalctl --user -u hermes-qwen35.service -n 30 --no-pager
+```
+
+This does not start, stop or restart anything. If PID status maps to another unit, inspect that exact unit instead of assuming `hermes-qwen35.service` owns it.
+
+After unit ownership is established, check the legacy server's current loaded model state on port 18434 using an authenticated read-only `/v1/models` call without exposing the credential value in command output or logs.
+
+### Hard constraints
+- Do not kill PID 1823 manually.
+- Do not stop a unit until its identity and loaded-model state have been confirmed.
+- Do not stop/restart Unsloth PID 10358 or close the Unsloth terminal.
+- Do not repeat Hermes or Claude Code smoke tests; both already passed.
+- Do not restart Gateway; its user service is active.
+- Do not assume two server processes necessarily equal two loaded copies of Qwen.
