@@ -168,3 +168,13 @@ Critical corrections:
 Full findings and next steps are in the canonical PC Rescue project record: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
 
 Next: verify the translated files' exact names, paths, sizes and hashes; do not retranslate or overwrite existing work.
+
+
+---
+
+## Latest superseding SystemRescue recovery data — 2026-10-31
+
+The second Hermes report corrected the main session start to 2026-10-24 and found two reported translated files in `/home/oleg/fcm-opencode-test`; six other files were not located there. Both found files have identical source and translation paths, so they may have replaced originals in place. Do not touch before preservation. Full sizes/hashes and next steps are in the PC Rescue audit:
+https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
+
+New context facts: Hermes config context 131072, auto-compress threshold 100000, historical server `-c 160000`, last subagent prompt 32964. Do not infer compression count from cache-write counts. The QEMU/SSH session timestamp still says 2024 despite the 20261024 ID and needs raw database resolution.
