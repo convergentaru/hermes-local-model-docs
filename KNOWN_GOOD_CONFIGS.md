@@ -157,3 +157,19 @@ The exact prompt and answer in the prior conversation were:
 - Answer: `HERMES_UNSLOTH_OK`
 
 This verifies Hermes CLI text generation through the configured Custom provider. It is not a test of Telegram/WhatsApp or other Gateway inbound messaging channels. Gateway daemon process health is separately verified; current Gateway startup said no messaging platforms are enabled.
+
+
+## 12. Claude Code → shared Unsloth smoke test — 2026-10-31
+
+**Status: VERIFIED.**
+
+User launched:
+`unsloth start claude --no-serve`.
+
+Claude Code reported:
+- Version `2.1.286`.
+- Model `Qwen3.5-9B-Q4_K_M`.
+- Exact response to prompt `Ответь строго одной строкой: CLAUDE_UNSLOTH_OK`:
+  `CLAUDE_UNSLOTH_OK`.
+
+This verifies a real generation through the Unsloth no-serve client path. Combined with the successful Hermes Custom-provider smoke test, both clients have generated through the intended shared Unsloth model. Exact process-count verification is a separate final read-only check.
