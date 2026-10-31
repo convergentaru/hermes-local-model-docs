@@ -393,3 +393,14 @@ The user executed `systemctl --user disable --now llama-server.service` and veri
 This confirms the legacy empty Hermes router has stopped and the intended Unsloth inference process is the only remaining llama-server process. The old unit file and model presets remain on disk; nothing was deleted.
 
 Both Hermes CLI and Claude Code had already passed exact-response functional tests via Unsloth. The next acceptance step is one direct Unsloth API generation after stopping the router. A clean reboot test and unattended Unsloth autostart remain pending.
+
+
+---
+
+## API 401 clarification — 2026-10-31
+
+A post-cleanup direct API probe returned HTTP 401 because it used the internal key file `~/.unsloth/studio/auth/llama_api_key_*` against the external Unsloth Studio wrapper on port 8888. This does not establish a server outage.
+
+Unsloth's own CI helper extracts the public wrapper API key from the `unsloth run` banner (`API Key:`, typically `sk-unsloth-...`) and uses it for `/v1/models`. The configured Hermes wrapper key is `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` in `~/.hermes/.env`; use that existing value without displaying it.
+
+Post-cleanup direct API verification remains pending, not failed at model generation level.
