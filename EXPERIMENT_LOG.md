@@ -553,3 +553,27 @@ active
 **Status:** VERIFIED for service deactivation, Gateway preservation and process count = 1.
 
 **Remaining:** one fresh direct Unsloth API generation test after disabling the legacy router. Then the manual post-reboot startup sequence can be consolidated. A real reboot test remains outstanding.
+
+
+---
+
+## 2026-10-31 — successful cleanup of duplicate/idle router process
+
+The user executed:
+`systemctl --user disable --now llama-server.service`.
+
+Actual post-action output:
+- legacy server: `inactive`;
+- legacy unit: `disabled`;
+- Hermes Gateway: `active`;
+- exact-name `llama-server` process count: `1`.
+
+This verifies:
+1. The empty Hermes router at port 18434 was stopped.
+2. The old user unit will not start automatically.
+3. Existing Hermes Gateway stayed active.
+4. Exactly one llama-server process remains (Unsloth/Qwen).
+
+No service or model files were deleted. Both Hermes and Claude Code functional tests had passed before this cleanup. The change can be reversed with `systemctl --user enable --now llama-server.service`, but do not do so for the chosen one-server architecture.
+
+Next: one direct Unsloth Chat Completions test after cleanup; then finish the documented manual boot/start order. A real reboot test is still outstanding.
