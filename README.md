@@ -84,6 +84,7 @@
 
 - [Сравнительный аудит HOME: Hermes vs Claude Code](docs/operations/HOME-DIRECTORY-AUDIT.md) — безопасный read-only протокол, проверка одного серверного слота и перекрёстная проверка отчётов.
 - [Длительная работа агентов и Paperclip](docs/operations/LONG-RUNNING-AGENT-WORK-PAPERCLIP.md) — ролевые задания, checkpoints, heartbeats, cross-review и подготовка к ночным задачам.
+- [Готовые длинные задания HOME-аудита](docs/operations/HOME-AUDIT-LONG-TASK-PROMPTS.md) — отдельные промпты для Hermes, Claude Code и взаимной проверки.
 
 ### Интеграции
 
