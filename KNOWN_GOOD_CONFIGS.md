@@ -173,3 +173,16 @@ Claude Code reported:
   `CLAUDE_UNSLOTH_OK`.
 
 This verifies a real generation through the Unsloth no-serve client path. Combined with the successful Hermes Custom-provider smoke test, both clients have generated through the intended shared Unsloth model. Exact process-count verification is a separate final read-only check.
+
+
+## 13. Process inventory correction — two llama-server processes observed 2026-10-31
+
+The intended one-server architecture has not yet been achieved at process level.
+
+Observed processes:
+- PID 1823: Hermes-bundled llama.cpp at `127.0.0.1:18434`, using Hermes model presets and `--models-autoload`.
+- PID 10358: Unsloth-bundled llama.cpp at dynamic internal port `53815`, serving the Qwen3.5-9B GGUF with context 160000 and parallel 1.
+
+The first process is a model-management server; whether it has a model loaded is not yet confirmed. Do not classify it as a second loaded Qwen instance without checking `/v1/models` on port 18434. Its owner unit must be identified using `systemctl --user status 1823`.
+
+No process was stopped in this inventory step.
