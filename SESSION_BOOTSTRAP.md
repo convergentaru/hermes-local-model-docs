@@ -122,3 +122,27 @@ unsloth run \
 ## Следующее действие
 
 См. [NEXT_ACTION.md](NEXT_ACTION.md). Не выполнять дополнительные изменения инфраструктуры без необходимости: последняя схема общего Unsloth endpoint уже прошла функциональные тесты.
+
+
+---
+
+## Latest superseding update — 2026-10-31
+
+This section supersedes older snapshots elsewhere in this file that describe two independent llama-server processes or legacy ports as the intended current architecture.
+
+### Current shared-model setup (verified on 2026-10-31)
+- One Unsloth `llama-server`, one loaded `Qwen3.5-9B-Q4_K_M.gguf`.
+- Unsloth API wrapper: `127.0.0.1:8888`.
+- Launch context: 160000; `--parallel 1`.
+- Hermes uses Custom OpenAI Chat Completions at `http://127.0.0.1:8888/v1`.
+- Claude Code 2.1.286 uses Anthropic-compatible API at `http://127.0.0.1:8888`, started with `unsloth start claude --no-serve`.
+- Hermes `local_runtime.enabled false`; the old Hermes model server on `:18434` was absent in the last full check.
+- Functional tests passed for Unsloth API, Hermes CLI, Hermes Gateway and Claude Code status. See `docs/screenlife/RUNBOOK.md` and `docs/screenlife/sessions/2026-10-31/README.md`.
+- PID and internal llama-server port are dynamic; never hardcode them.
+- One slot means requests from agents are serialized. Do not describe this as parallel inference.
+
+### Hermes ↔ Claude Code integration decision
+The official options and rationale are documented in `docs/integrations/hermes-claude-code.md`. Decision: **do not install additional integration yet**. Keep agents independent for Screenlife comparison. Evaluate one-way MCP Serve only when a concrete cross-agent use case appears.
+
+### SystemRescue translation remains a separate pending task
+Do not mix it with Screenlife. The likely task is Russian translation of SystemRescue 13.02 help material previously extracted to `systemrescue-help-original`. Await the result of Hermes `session_search` for the original task/session and `/usage` compression telemetry. Do not rerun translation until the previous session/result is recovered.
