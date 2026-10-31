@@ -178,3 +178,59 @@ The second Hermes report corrected the main session start to 2026-10-24 and foun
 https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
 
 New context facts: Hermes config context 131072, auto-compress threshold 100000, historical server `-c 160000`, last subagent prompt 32964. Do not infer compression count from cache-write counts. The QEMU/SSH session timestamp still says 2024 despite the 20261024 ID and needs raw database resolution.
+
+
+---
+
+## Latest runtime recovery checkpoint — 2026-10-31
+
+This checkpoint supersedes earlier claims that the Hermes Gateway was currently active. It records the latest user-provided evidence only.
+
+### Intended architecture
+One Qwen3.5-9B model, one Unsloth-managed inference server, two independent clients:
+- Hermes → Custom OpenAI Chat Completions → Unsloth.
+- Claude Code → Unsloth's supported Anthropic-compatible route.
+- Preserve Hermes Gateway, memory, sessions, TTS and independent agent toolsets.
+- Do not launch a second model server.
+
+### Unsloth — VERIFIED
+The user ran:
+
+```bash
+unsloth run \
+  --model "/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf" \
+  --context-length 160000 \
+  --gpu-memory-mode manual \
+  --parallel 1 \
+  --port 8888 \
+  --host 127.0.0.1 \
+  --disable-tools
+```
+
+Observed:
+- CLI version `2026.10.11`.
+- Model loaded and internal llama-server reported ready.
+- Client API: `http://127.0.0.1:8888/v1`.
+- Internal port in this run: `53815` (dynamic).
+- `/v1/models` returned HTTP 200 and reported the Qwen model loaded, context 160000, native/max context 262144.
+- A real Chat Completions request returned HTTP 200 with the expected response.
+- `--disable-tools` was passed. Agent-side tool functionality remains a separate acceptance test.
+
+### Hermes — configuration observed; Gateway currently inactive
+- Config provider is `custom`, base URL `http://127.0.0.1:8888/v1`, model `Qwen3.5-9B-Q4_K_M`, API mode `chat_completions`, context 160000.
+- `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` exists in `~/.hermes/.env`; never copy its value into logs.
+- Piper TTS settings remain in config; no TTS change was made.
+- Latest `systemctl is-active`: `hermes-gateway.service` inactive.
+- Latest `systemctl is-active`: `llama-server.service` inactive.
+
+Do not start the legacy `llama-server.service`; Unsloth must remain the sole model-server owner. The next action is read-only inspection of the Hermes Gateway unit and journal (see `NEXT_ACTION.md`). No Gateway start or unit/config edit has yet been performed for this checkpoint.
+
+### Recovery order
+1. Inspect existing Gateway unit/status/journal.
+2. Restore the existing Gateway only after the cause is understood; preserve its memory, sessions and Piper setup.
+3. Send a real Hermes request through the Gateway and verify the Unsloth route.
+4. Attach Claude Code to the same Unsloth server without spawning another model process.
+5. Verify one model-server process and functional requests from both independent clients.
+6. Turn the verified sequence into the final reboot/startup runbook, with checkpoints and recovery steps.
+
+Record every stage in `EXPERIMENT_LOG.md`, `CURRENT_STATE.md` and `NEXT_ACTION.md`. Do not call the whole architecture restored until both clients pass functional tests.
