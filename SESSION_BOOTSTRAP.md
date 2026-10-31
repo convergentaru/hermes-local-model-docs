@@ -309,3 +309,14 @@ PID 1823 is the active user service `llama-server.service` at port 18434. It use
 The distinct `hermes-qwen35.service` is inactive/dead and disabled. It is not PID 1823.
 
 Do not stop PID 1823 or its unit before checking loaded model state and dependency. Unsloth PID 10358 remains the active Qwen service.
+
+
+---
+
+## Legacy Hermes router is empty; deactivation pending — 2026-10-31
+
+Read-only authenticated queries to port 18434 returned seven preset entries, all `unloaded`, on both `/models` and `/v1/models`. PID 1823 is the router process owned by user unit `llama-server.service`; its unit has `Restart=on-failure` and is enabled via `default.target`. The separate `hermes-qwen35.service` is inactive/dead and disabled.
+
+Only the Unsloth server PID 10358 has Qwen3.5-9B loaded. Hermes CLI and Claude Code passed independent generation tests via Unsloth, and Hermes Gateway is a separate active user service without a declared dependency on the legacy router.
+
+Next planned reversible action: `systemctl --user disable --now llama-server.service`. This action is not yet performed. It preserves the unit file and model presets but stops the empty router and prevents automatic startup. Then verify Gateway still active and exact llama-server count is 1. Keep Unsloth running.
