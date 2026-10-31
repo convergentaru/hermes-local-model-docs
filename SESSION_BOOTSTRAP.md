@@ -348,3 +348,23 @@ The user disabled the legacy Hermes router with `systemctl --user disable --now 
 - `pgrep -xc llama-server` returned 1.
 
 Thus exactly one llama-server process remains, the Unsloth-managed Qwen server. Old unit/config/model files are preserved. A post-cleanup direct Unsloth API generation test is the remaining immediate check. Hermes and Claude Code generation probes were already successful. Reboot/startup persistence is not yet verified.
+
+
+---
+
+## Runtime recovery fully verified after legacy-router cleanup — 2026-10-31
+
+The post-cleanup Unsloth API probe succeeded using the existing Hermes Custom provider key:
+- Model inventory showed `Qwen3.5-9B-Q4_K_M loaded`.
+- Chat Completions returned `UNSLOTH_AFTER_ROUTER_STOP_OK`.
+
+At the same time the post-cleanup systemd/process check had already shown:
+- legacy Hermes `llama-server.service`: inactive/disabled;
+- Hermes Gateway: active;
+- exactly one `llama-server` process.
+
+Both independent clients also passed their smoke tests:
+- Hermes: `HERMES_UNSLOTH_OK`.
+- Claude Code v2.1.286: `CLAUDE_UNSLOTH_OK`.
+
+The shared-model runtime recovery is therefore complete and functionally verified. What remains is documentation/review of the exact manual startup checklist and, optionally, a controlled cold-reboot test. Unsloth boot autostart is not currently configured or claimed.
