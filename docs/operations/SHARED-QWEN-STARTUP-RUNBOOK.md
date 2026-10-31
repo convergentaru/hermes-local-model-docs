@@ -171,3 +171,19 @@ Acceptance distinction:
 Do not mark messaging adapters as verified based on the CLI test.
 
 The Gateway does not need to be restarted for the next step. Proceed to Claude Code against the already-running Unsloth endpoint.
+
+
+---
+
+## Phase 3 result — Claude Code acceptance passed (2026-10-31)
+
+The user ran:
+```bash
+unsloth start claude --no-serve
+```
+
+Claude Code v2.1.286 displayed model `Qwen3.5-9B-Q4_K_M` and returned exact expected response `CLAUDE_UNSLOTH_OK` to the test prompt.
+
+Combined with the previous Hermes CLI Custom-provider response `HERMES_UNSLOTH_OK`, both independent clients have now passed real generation smoke tests against the intended Qwen/Unsloth setup.
+
+**Do not repeat** the Hermes or Claude smoke tests and do not restart the Gateway. Remaining immediate acceptance step: count exact `llama-server` processes once and inspect their command lines to verify the one-server invariant. Then update the final run order. A clean reboot test is still outstanding.
