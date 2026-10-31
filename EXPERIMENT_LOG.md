@@ -260,3 +260,63 @@ Protocol and copy/paste prompt: `docs/operations/HOME-DIRECTORY-AUDIT.md`.
 **Docs:** `docs/operations/LONG-RUNNING-AGENT-WORK-PAPERCLIP.md`, expanded `docs/operations/HOME-DIRECTORY-AUDIT.md`.
 
 **Status:** RESEARCHED / DESIGNED / NOT RUN. No Paperclip install, agent adapter config or local HOME scan has been performed by ChatGPT.
+
+
+---
+
+## 2026-10-31 — Unsloth Qwen 160K launch and direct API verification; Hermes service recovery checkpoint
+
+### Goal
+Restore the intended shared-model topology: one Qwen3.5-9B model served by Unsloth; existing Hermes and Claude Code remain separate clients of that endpoint.
+
+### Unsloth launch — VERIFIED
+The user executed:
+
+```bash
+unsloth run \
+  --model "/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf" \
+  --context-length 160000 \
+  --gpu-memory-mode manual \
+  --parallel 1 \
+  --port 8888 \
+  --host 127.0.0.1 \
+  --disable-tools
+```
+
+Observed:
+- Unsloth CLI `2026.10.11`.
+- Model loaded; Unsloth reported the llama-server ready.
+- Client endpoint: `http://127.0.0.1:8888/v1`.
+- Internal llama-server port: `53815` for this run; dynamic and not a client endpoint.
+- `GET /v1/models` returned HTTP 200. Qwen3.5-9B-Q4_K_M was loaded; configured context 160000; reported native/max context 262144.
+- A real Chat Completions request returned HTTP 200 and the expected Russian answer.
+- A memlock/RLIMIT warning appeared in the launch log, but model loading and API generation succeeded. No limit changes were made.
+
+**Status:** VERIFIED for Unsloth model loading and direct API generation.
+
+### Hermes provider configuration — OBSERVED
+The inspected Hermes config already selects:
+- provider `custom`;
+- `http://127.0.0.1:8888/v1`;
+- model `Qwen3.5-9B-Q4_K_M`;
+- `chat_completions`;
+- context `160000`.
+
+The configured environment variable `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` was confirmed present in `~/.hermes/.env`. Its value is not recorded. Piper TTS configuration was present; no voice test was part of this step.
+
+**Status:** OBSERVED. Config correctness is established, but this is not a successful Gateway request test.
+
+### systemd status — OBSERVED
+User ran `systemctl is-active` for both services and received:
+- `hermes-gateway.service`: `inactive`.
+- `llama-server.service`: `inactive`.
+
+The legacy `llama-server.service` must stay inactive to prevent a second model server. The existing Hermes Gateway needs diagnosis. Its unit file and recent journal have not yet been inspected. No service start, stop, or config edit was performed in this checkpoint.
+
+### Next diagnostic action
+Read-only inspection of:
+`systemctl status hermes-gateway.service --no-pager -l`,
+`systemctl cat hermes-gateway.service`, and
+`journalctl -u hermes-gateway.service -n 40 --no-pager`.
+
+Do not start the old `llama-server.service`. Do not edit Hermes config or systemd units until the Gateway's actual unit and failure/stop reason are known.
