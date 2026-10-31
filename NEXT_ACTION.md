@@ -164,3 +164,8 @@ Context report: Hermes gives Config `context_length=131072`, `auto_compress_thre
 Detailed audit: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
 
 The separate user priority remains unchanged: audio work first; larger-model download later.
+
+
+## Benchmark protocol for any future model switch
+
+Follow `docs/model-selection/BENCHMARK-PROTOCOL.md`: compare identical tasks, measure TTFT, prefill/generation tok/s, peak VRAM/RAM, context stability, tool-call success and output correctness. Preserve raw traces and failed runs. Do this only after the user's current audio priority is addressed.
