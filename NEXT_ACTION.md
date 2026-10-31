@@ -259,3 +259,18 @@ Wait for this output before taking action. Determine whether the Gateway exited,
 - Existing Hermes Gateway: INACTIVE; cause UNKNOWN; diagnosis pending.
 - Legacy Hermes llama-server service: INACTIVE; intentionally keep it that way.
 - Claude Code connection in this latest runtime: NOT YET RETESTED.
+
+
+---
+
+## Correction to Hermes Gateway diagnosis — 2026-10-31
+
+The last user check queried the system manager only and returned `Unit hermes-gateway.service could not be found`. Do **not** infer that the Gateway is missing or stopped: the normal Hermes Linux service is user-scoped unless explicitly installed with `--system`.
+
+Next step is read-only:
+1. `hermes gateway status` — official Hermes command to inspect the selected installation's default service.
+2. `systemctl --user status hermes-gateway.service --no-pager -l`.
+3. `systemctl --user cat hermes-gateway.service`.
+4. `journalctl --user -u hermes-gateway.service -n 40 --no-pager`.
+
+If the user manager reports the unit missing too, inspect the Hermes CLI status output and existing user unit files before considering any install. Do not run `hermes gateway install`, `start`, or `run` yet. Do not start the legacy `llama-server.service`.
