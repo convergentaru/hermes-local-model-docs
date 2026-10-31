@@ -327,3 +327,33 @@ The user ran `systemctl --user status 1823`, which mapped PID 1823 to the exact 
 - `hermes-qwen35.service` is `inactive (dead)`, unit file loaded but disabled; description says it is the Hermes local Qwen3.5-4B server. It is not the owner of PID 1823.
 
 The old server is therefore a model router/manager that is active as a process, but loaded model state remains **UNKNOWN**. The next check must query its read-only router `/models` endpoint and inspect the unit definition. Do not stop it until that result confirms no model is loaded and its dependencies are understood.
+
+
+---
+
+## Legacy Hermes router model inventory — confirmed completely unloaded, 2026-10-31
+
+The user queried both `GET /models` and `GET /v1/models` on legacy router port 18434 using the key read from PID 1823 without printing the value.
+
+Both endpoints returned the same seven presets; **all seven reported `status.value = unloaded`**, including `Qwen3.5-9B-Q4_K_M`. No model is loaded by the legacy router at this time.
+
+The unit config confirms this is an independent user service:
+- `llama-server.service`, `~/.config/systemd/user/llama-server.service`.
+- Starts router mode with `--models-max 1 --models-autoload`, listening at 127.0.0.1:18434.
+- `Restart=on-failure`, `WantedBy=default.target`.
+- Current router only has preset inventory; all entries unloaded.
+- Separate `hermes-qwen35.service` remains inactive/dead and disabled.
+
+The intended Unsloth process remains PID 10358 (dynamic; don't hardcode) serving Qwen on internal port 53815, context 160000, parallel 1.
+
+**Conclusion:** there are two active llama-server processes but only one loaded model. The 18434 router is idle and redundant for the accepted Custom-provider architecture. Hermes CLI and Claude Code each passed their Unsloth smoke test. The Gateway is active as a user service and its unit has no declared dependency on `llama-server.service` (it only orders/wants network-online).
+
+**Planned change, not yet executed:** stop and disable the idle legacy router using `systemctl --user disable --now llama-server.service`. This removes it from automatic user-session startup and stops the router; it does not delete its unit file, presets, models, or Hermes configuration. It is reversible with `systemctl --user enable --now llama-server.service`, but do not re-enable it during the shared-one-server configuration.
+
+After the operation verify:
+- `llama-server.service` inactive and disabled;
+- Hermes Gateway remains active;
+- Unsloth endpoint still responds;
+- exactly one `llama-server` process remains (the Unsloth process).
+
+No service state change has been performed yet.
