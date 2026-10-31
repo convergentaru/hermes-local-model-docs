@@ -254,3 +254,14 @@ Do not run Gateway installation or restart commands; the service is already acti
 Application-level warnings: no messaging platforms enabled; WhatsApp has no configured bot credential and is not paired. These warnings do not equate to a stopped Gateway daemon.
 
 Next: run one Hermes CLI one-shot query through the existing Gateway and confirm that the configured Custom provider reaches Unsloth. Only after that smoke test, proceed to Claude Code. Do not re-run system-manager Gateway checks.
+
+
+---
+
+## Hermes Custom → Unsloth successful smoke test — 2026-10-31
+
+The user resumed Hermes session `local-bd95986af8a0ecfcfc909532acc3d5ae08730dee0c92b157d4e21eba2c508371`. Hermes restored model `Qwen3.5-9B-Q4_K_M (custom:unsloth-qwen-160k)`. The test prompt `Ответь строго одной строкой: HERMES_UNSLOTH_OK` produced the exact expected response `HERMES_UNSLOTH_OK`.
+
+This verifies Hermes CLI Custom provider → Unsloth inference. It does not verify messaging-platform inbound routing. Existing Gateway is independently confirmed active as user service, while its logs warn no messaging platforms are enabled and WhatsApp is not paired.
+
+Next task: test Claude Code with the existing Unsloth server and then verify that only one Qwen inference server is running. Do not repeat the Hermes test or restart the Gateway.
