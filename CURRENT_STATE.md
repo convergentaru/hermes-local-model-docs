@@ -200,3 +200,37 @@ This does **not** establish that Hermes Gateway is absent or stopped globally. T
 
 Next: run the documented read-only `hermes gateway status`, then inspect `systemctl --user` status/unit/journal. Do not install, start, or edit anything until these checks identify the current service state and existing files.
 Official docs: https://hermes-agent.nousresearch.com/docs/user-guide/messaging
+
+
+---
+
+## Correction from full user-scope Gateway output — 2026-10-31
+
+The complete output of `hermes gateway status` and `systemctl --user` confirms that the existing Hermes Gateway is **ACTIVE and ENABLED** as a user service. Earlier conclusions based on system-scope `systemctl` were incorrect for this host and are superseded.
+
+Observed:
+- Unit: `/home/oleg/.config/systemd/user/hermes-gateway.service`.
+- State: `active (running)`, `enabled`.
+- Started: 2026-10-31 13:39:29 MSK.
+- Main PID: 1822 (`hermes ... gateway run`).
+- Child processes: MCP server PID 4378; Hermes MCP death supervisor PID 4379.
+- systemd linger is enabled, so the user service survives logout.
+- `hermes gateway status` explicitly reports: `User gateway service is running`.
+
+Important application-level warnings from the same output:
+- `No messaging platforms enabled.`
+- WhatsApp is configured/enabled but no profile has a bot credential; it is not being served / not paired.
+- No environment user allowlists are configured; gateway logs describe pairing/allowlist default policy.
+These warnings do not mean the Gateway daemon is stopped. They mean it currently has no active messaging platform configured to receive bot messages.
+
+Historical log evidence:
+- At 13:35:54 the previous Gateway process made 3 failed custom-provider attempts to `http://127.0.0.1:8888/v1`, ending with `APIConnectionError`.
+- It received SIGTERM at 13:38:58 and the current process started at 13:39:29.
+- The current startup at 13:39:48 reports no enabled messaging platforms. It has not yet been proven with a fresh end-to-end model request after the successful Unsloth startup.
+
+Unit inventory also showed:
+- `hermes-gateway.service`: enabled.
+- `hermes-qwen35.service`: disabled (do not start; inspect only if its role becomes relevant).
+The system-scope query for `hermes-gateway.service` returned not found; that scope is irrelevant because the actual Gateway runs in the user manager.
+
+Next test: a single Hermes CLI one-shot query through the existing Gateway to verify Gateway → Custom provider → Unsloth. No Gateway restart, install, or unit edit is required for this test.
