@@ -1,116 +1,68 @@
 # CURRENT_STATE — локальная AI-инфраструктура
 
-Последнее обновление: 2026-10-31  
-Главная документация: `convergentaru/hermes-local-model-docs`  
-Общий протокол: [docs/operations/SHARED-MEMORY-PROTOCOL.md](docs/operations/SHARED-MEMORY-PROTOCOL.md)
+Последнее обновление: 2026-10-31.  
+Последний подтверждённый снимок runtime: 2026-10-31.  
+Полная точка восстановления: [SESSION_BOOTSTRAP.md](SESSION_BOOTSTRAP.md).
 
-> Это снимок состояния на указанную дату, а не обещание, что сервисы продолжают работать сейчас. Статусы отражают только подтверждённые сведения.
+> Ниже описано состояние по последним фактическим тестам, не live-мониторинг. PID и внутренние порты llama-server динамические.
 
-## Цель текущего этапа
+## Архитектура
 
-Восстановить запуск Claude Code через Unsloth Desktop/Studio с одной копией Qwen3.5-9B. Не запускать параллельную копию модели в Hermes. Сохранить существующие настройки и не переустанавливать компоненты без необходимости.
+<badge-placeholder/>
 
-## Компьютер
+- Одна загруженная модель: `Qwen3.5-9B-Q4_K_M.gguf`.
+- Один общий Unsloth `llama-server`.
+- Unsloth API wrapper: `127.0.0.1:8888`.
+- Два клиента через один endpoint: Hermes (OpenAI Chat Completions) и Claude Code (Anthropic-compatible).
+- `--parallel 1`: запросы обслуживаются по одному, с конкуренцией за единственный слот.
+- Контекст запуска: 160000.
+- Не запускать вторую копию модели и не менять архитектуру без теста и обоснования.
 
-- Ubuntu 26.
-- NVIDIA GeForce RTX 3060, 12 GB VRAM.
-- Системная RAM: около 12 GB.
-- Swap: 4 GB.
-- Основной язык окружения: русский.
+## Последний runtime-снимок
 
-## Модель и расположение
+- Unsloth CLI: `2026.10.11`.
+- Модель: `/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf`.
+- API wrapper: `127.0.0.1:8888`, HTTP 200.
+- Внутренний llama-server port: `55831` (динамический в том снимке).
+- llama-server PID: `259764` (исторический, не использовать как постоянный).
+- Реально переданные аргументы включали `--parallel 1`, `-c 160000`.
+- В последней полной проверке обнаружен один llama-server.
+- Порт `18434` отсутствовал после отключения Hermes local runtime.
+- Hermes Gateway был перезапущен после `hermes config set local_runtime.enabled false` и затем ответил `GATEWAY`.
+- Hermes CLI после переключения на `custom:Qwen3.5-9B-Q4_K_M` и новой сессии ответил `ГОТОВО`.
+- Claude Code 2.1.286 через `unsloth start claude --no-serve`; `/status` показывал Qwen и base URL `http://127.0.0.1:8888`.
+- Прямой OpenAI-compatible тест Unsloth: HTTP 200, тело ответа `ГОТОВО`.
 
-- Целевая модель: `Qwen3.5-9B-Q4_K_M.gguf`.
-- Путь, использовавшийся в последнем запуске: `/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf`.
-- Наличие файла и его метаданные в ходе текущей сессии заново не проверялись.
-- Не переносить и не удалять модель без отдельного подтверждения.
+**Статус:** VERIFIED на дату тестов 2026-10-31. Для текущего запуска в новую дату проверять только то, что реально могло измениться.
 
-## Состояние на 2026-10-31
+## Настройки, которые не следует менять без причины
 
-| Компонент / факт | Статус | Примечание |
-|---|---|---|
-| Остановка AI/model процессов | OBSERVED | Пользователь сообщил, что VRAM после остановки занята примерно на 0,5%. |
-| Unsloth Studio | UNKNOWN | После остановки процессов не подтверждён повторный запуск. |
-| Qwen3.5-9B в Unsloth | UNKNOWN | Требуется загрузка одной модели через GUI и проверка ответа. |
-| Hermes model server | STOPPED (по сообщению пользователя) | В этой рабочей сессии не должен запускаться параллельно с Unsloth. |
-| Claude Code | NOT RUNNING / UNKNOWN | Требуется подключить после успешного теста модели через Unsloth. |
-| Unsloth API :8888 | HISTORICAL | Ранее использовался как API/входная точка Studio. Текущее состояние не проверено. |
-| Unsloth worker :33085 | HISTORICAL | Ранее наблюдался как worker модели. Порт может изменяться. |
-| Hermes llama-server :46223 | HISTORICAL | Ранее был второй копией Qwen; не запускать одновременно с Unsloth. |
+- Контекст: 160000.
+- Parallel: 1.
+- Unsloth API: 127.0.0.1:8888.
+- Модельный файл: `/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf`.
+- Hermes `local_runtime.enabled false`, чтобы не поднимать конкурирующий локальный сервер на 18434.
+- Claude Code подключать к уже работающему серверу через `--no-serve`.
+- Не запускать Unsloth Studio Chat, если задача — только API для Hermes и Claude Code.
+- Не запускать Hermes Gateway restart, если конфигурация не менялась и Gateway уже работает.
 
-## Исторически наблюдавшаяся проблема
+## Память и контекст Hermes
 
-Ранее одновременно работали две копии Qwen3.5-9B:
-- Hermes `llama-server` на порту 46223, около 7590 MiB VRAM;
-- Unsloth worker на порту 33085, около 3726 MiB VRAM.
+- Настроенный Hermes Custom context: 160000.
+- Это не гарантирует сохранение всей истории в активном контексте: compression может суммировать старые сообщения.
+- Точные session telemetry проверять через `/usage`, `/context`, а утраченные прошлые сообщения искать через `session_search`/архив.
+- Утверждение о жёстком лимите 70K не подтверждено фактической конфигурацией и не должно повторяться без доказательств.
 
-Общая занятость GPU достигала примерно 11842 MiB из 12288 MiB. Это объясняет дефицит VRAM в том снимке. Порты являются историческими наблюдениями, а не фиксированными значениями.
+## Screenlife
 
-## Ошибка последней попытки
+Проект и результаты сравнительных тестов Hermes vs Claude Code сохранены в [docs/screenlife/](docs/screenlife/README.md). Последняя публикация результатов — коммит `4efd7fa63a2e8a74f05908ec85694d1eb5f5dae8`.
 
-Команда:
+## Прочие задачи
 
-```bash
-unsloth start claude --model /home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf --max-seq-length 65536
-```
+SystemRescue translation: задача восстановления предыдущей Hermes session и проверки перевода описана в [SESSION_BOOTSTRAP.md](SESSION_BOOTSTRAP.md) и [NEXT_ACTION.md](NEXT_ACTION.md). Не запускать перевод заново до выяснения исхода прежнего задания.
 
-Результат:
+## Журнал и протокол
 
-```text
-Error: Input must be provided either through stdin or as a prompt argument when using --print
-```
-
-Статус: FAILED. Не повторять как проверенный способ запуска. Требуется восстановить запуск через GUI Unsloth и отдельно правильный способ подключения Claude Code.
-
-## Известные исторические настройки Unsloth
-
-Для более раннего запуска Qwen3.5-9B в Unsloth наблюдались:
-- контекст 65 536;
-- parallel 4;
-- Flash Attention On;
-- Context Shift Off;
-- KV Unified On;
-- Fit On;
-- Context Checkpoints 5;
-- Reasoning Off;
-- Load Mode mmap+mlock.
-
-Эти параметры являются историческими сведениями и требуют сверки с сохранённым профилем GUI. Не считать их полностью восстановленной текущей конфигурацией.
-
-## Известные параметры Claude Code
-
-В прежнем профиле Unsloth/Claude наблюдались:
-- `ANTHROPIC_BASE_URL=http://127.0.0.1:8888`;
-- `ANTHROPIC_MODEL=Qwen3.5-9B-Q4_K_M`;
-- `CLAUDE_CODE_MAX_CONTEXT_TOKENS=65536`;
-- `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=90`;
-- `CLAUDE_CODE_MAX_OUTPUT_TOKENS=16384`.
-
-Считать историческим профилем, пока он не будет прочитан из локальных настроек и протестирован. Секреты и API keys не документировать.
-
-## Что уже есть в документации
-
-- [Unsloth Desktop: общая библиотека, CUDA и custom llama.cpp](docs/unsloth/studio-model-library-and-custom-llama-cpp.md)
-- [Архитектура локального AI-стека](docs/architecture/current-local-ai-stack.md)
-- [Диагностика локального AI-стека](skills/local-ai-stack-diagnostics/SKILL.md)
-- [Project Atlas](docs/hermes/project-atlas/START.md)
-
-## Правило следующего шага
-
-Следующий шаг — не терминальная команда запуска Claude. Сначала открыть Unsloth Desktop/Studio, проверить существующий профиль, выбрать одну Qwen3.5-9B GGUF, загрузить её с параметрами из профиля и выполнить короткий тест в самом приложении. Только после успешного ответа подключать Claude Code.
-
-
----
-
-## Дополнение: снимок 2026-10-31 — Hermes + Unsloth + три agent-клиента
-
-Актуальная сводка и хронология этой сессии: [SESSION_BOOTSTRAP.md](SESSION_BOOTSTRAP.md). Этот блок новее первоначального описания портов выше.
-
-- Рабочая тройка клиентов, которую сейчас рассматриваем: Hermes, OpenCode и jcode. GBrain — вспомогательная система памяти; не считать его подтверждённым четвёртым model-клиентом.
-- Hermes model server по переданному systemd unit использует `127.0.0.1:18434`; Gateway использует этот адрес из `~/.hermes/config.yaml`.
-- Hermes `llama-server.service` был остановлен пользователем во время теста jcode. Обратный запуск в этой сессии не подтверждён.
-- Unsloth worker на `52681` был LISTEN с PID `212601` в одном снимке, но при последующем jcode run соединение уже отклонялось. Текущий порт неизвестен.
-- jcode v0.99.1, profile `unsloth-qwen`, модель `Qwen3.5-9B-Q4_K_M`. Auth-test ранее получил HTTP 401 Missing bearer; последующий прямой run получил TCP Connection refused. Это разные этапы и разные отказы.
-- Не считать jcode подключённым к модели до успешного фактического ответа `JCODE_UNSLOTH_OK`.
-- Секрет из присланного Hermes unit намеренно не сохранён; его следует ротировать.
-
+- [EXPERIMENT_LOG.md](EXPERIMENT_LOG.md)
+- [NEXT_ACTION.md](NEXT_ACTION.md)
+- [Общий протокол GitHub-first](docs/operations/SHARED-MEMORY-PROTOCOL.md)
