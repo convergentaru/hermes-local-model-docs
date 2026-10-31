@@ -379,3 +379,17 @@ This confirms that only one llama-server process remains after disabling the emp
 **One remaining immediate check:** verify Unsloth still returns a fresh API response after the router stop. The earlier Hermes and Claude success tests occurred before this service-state change; do not repeat both agent tests unless the direct API check fails.
 
 The intended launch sequence is now documented, but clean reboot/autostart acceptance is still pending. Do not claim that a systemd-managed Unsloth auto-start is configured: Unsloth remains launched by the known-good CLI command in a terminal.
+
+
+---
+
+## One-server invariant — post-change user verification (2026-10-31)
+
+The user executed `systemctl --user disable --now llama-server.service` and verified:
+- `llama-server.service`: inactive, disabled.
+- `hermes-gateway.service`: active.
+- `pgrep -xc llama-server`: 1.
+
+This confirms the legacy empty Hermes router has stopped and the intended Unsloth inference process is the only remaining llama-server process. The old unit file and model presets remain on disk; nothing was deleted.
+
+Both Hermes CLI and Claude Code had already passed exact-response functional tests via Unsloth. The next acceptance step is one direct Unsloth API generation after stopping the router. A clean reboot test and unattended Unsloth autostart remain pending.
