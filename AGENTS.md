@@ -38,3 +38,8 @@
 ## Секреты
 
 Никогда не коммить API keys, bearer tokens, пароли, реальные значения из `.env` / `*.env`, приватные заголовки или полные секретные конфиги. В документации оставляй только безопасные пути, имена переменных и несекретные значения.
+
+
+## Benchmarking requirement
+
+For model selection, upgrades, quantization or inference tuning, use `docs/model-selection/BENCHMARK-PROTOCOL.md`. Compare actual TTFT, prefill/generation throughput, peak VRAM/RAM, context stability, tool-call success and task correctness. Keep standardized model capability benchmarks separate from local runtime measurements and agent workflow tests. Never recommend a larger model from parameter count or GGUF file size alone.
