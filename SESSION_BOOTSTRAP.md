@@ -234,3 +234,23 @@ Do not start the legacy `llama-server.service`; Unsloth must remain the sole mod
 6. Turn the verified sequence into the final reboot/startup runbook, with checkpoints and recovery steps.
 
 Record every stage in `EXPERIMENT_LOG.md`, `CURRENT_STATE.md` and `NEXT_ACTION.md`. Do not call the whole architecture restored until both clients pass functional tests.
+
+
+---
+
+## Definitive Hermes Gateway status correction — 2026-10-31
+
+The earlier system-scope lookup was misleading. The actual Hermes Gateway is installed in the user's systemd manager and was confirmed running by the user's full command output.
+
+- `hermes gateway status`: User gateway service is running.
+- Unit file: `/home/oleg/.config/systemd/user/hermes-gateway.service`.
+- `systemctl --user`: active (running), enabled.
+- Main PID 1822 at the time of inspection.
+- systemd linger enabled.
+- Child MCP server and supervisor were running.
+
+Do not run Gateway installation or restart commands; the service is already active.
+
+Application-level warnings: no messaging platforms enabled; WhatsApp has no configured bot credential and is not paired. These warnings do not equate to a stopped Gateway daemon.
+
+Next: run one Hermes CLI one-shot query through the existing Gateway and confirm that the configured Custom provider reaches Unsloth. Only after that smoke test, proceed to Claude Code. Do not re-run system-manager Gateway checks.
