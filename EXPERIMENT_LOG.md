@@ -476,3 +476,23 @@ done
 - Inspect the identified unit status/cat/journal.
 - Check current model state on legacy port 18434 without printing or copying the API key.
 - Do not kill PID 1823 or stop the unit yet. Preserve PID 10358/Unsloth.
+
+
+---
+
+## 2026-10-31 — identified owner of legacy port 18434
+
+**User-provided result:** `systemctl --user status 1823` mapped PID 1823 to `llama-server.service`.
+
+Observed:
+- Unit path: `~/.config/systemd/user/llama-server.service`.
+- Active (running), enabled; Main PID 1823.
+- Process is Hermes-bundled llama.cpp on port 18434.
+- Command uses `--models-max 1 --models-autoload`, Hermes model presets.
+- Startup log explicitly states: `starting server in router mode. models will be automatically loaded on-demand`.
+- Memory shown for the router process: 11.4M current, peak 242.3M.
+- `hermes-qwen35.service` is separately loaded but `inactive (dead)`, disabled; it is described as a Qwen3.5-4B server.
+
+**Interpretation:** PID 1823 is the legacy Hermes router, not the active Unsloth Qwen process. Low memory and router-mode startup suggest it may have no loaded child model; this remains an inference until its `GET /models` state is checked.
+
+**Status:** owner unit VERIFIED; active loaded-model inventory on port 18434 UNKNOWN; no service was stopped.
