@@ -140,3 +140,27 @@ Why defer the 27B model:
 After audio: inspect actual free RAM/VRAM, inventory the existing collection for `Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf`, then decide whether to test that existing file or download a separate Qwen3.8-27B quant. Never overwrite the 9B baseline or run two large servers simultaneously.
 
 Separate pending work remains: verify the eight SystemRescue translations reported by Hermes. Do not treat that task as completed until the actual files are located and reviewed.
+
+
+---
+
+## Latest SystemRescue translation status — second Hermes report (2026-10-31)
+
+Hermes now reports only two existing translated Markdown files in `/home/oleg/fcm-opencode-test`:
+- `Configuring_SystemRescue_sysconfig.md` — 15,020 bytes; SHA-256 `c9e4d2e1351dc182b0032fa97eb3e91a6bb6fe3c9da436f199addaabc232c066`.
+- `Downloading_and_burning.md` — 3,008 bytes; SHA-256 `99198e2a28c27f805bfa0bcd8b19e4a30b418d1feee405ec659c90939fac8699`.
+
+Both are reported to have the same original and translated paths, so they may have replaced originals in place. Do not edit, overwrite, move or retranslate them until byte-for-byte preservation is planned. The other six files were not found in that directory; their exact names have not yet been extracted from the subagent transcript.
+
+Next SystemRescue actions:
+1. Obtain exact original eight filenames from subagent `20261028_133323_20e490` prompt/transcript.
+2. Read-only locate the six other outputs by exact filename; do not search the whole disk indiscriminately.
+3. Check `git status` and remote in `/home/oleg/fcm-opencode-test`; preserve all uncommitted data.
+4. Recalculate hashes/sizes directly on the machine and compare the two outputs with exact upstream originals after preserving them.
+5. Update the canonical audit before any translation rerun or ISO build.
+
+Context report: Hermes gives Config `context_length=131072`, `auto_compress_threshold=100000`, historical server `-c 160000`, and subagent `last_prompt_tokens=32964`. Do not infer compression count from cache-write tokens. The SSH/QEMU session timestamp still reports 2024 despite its 20261024 ID; raw metadata needs resolution.
+
+Detailed audit: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
+
+The separate user priority remains unchanged: audio work first; larger-model download later.
