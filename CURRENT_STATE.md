@@ -132,3 +132,8 @@ Hermes reports two files in `/home/oleg/fcm-opencode-test`, with sizes and SHA-2
 Latest reported context data: Hermes configured window 131072; auto-compress threshold 100000; historical llama-server `-c 160000`; subagent last prompt 32964. These are distinct settings/measurements. Cache-write counters do not establish compression count. The SSH/QEMU session still has a timestamp discrepancy (session ID 20261024 but reported year 2024).
 
 Detailed record: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
+
+
+## Benchmarking standard
+
+All future model comparisons must follow `docs/model-selection/BENCHMARK-PROTOCOL.md`. Separate capability scores from actual local inference speed and agent workflow quality. No model upgrade is decided from parameter count or file size alone.
