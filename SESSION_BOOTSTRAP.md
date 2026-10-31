@@ -146,3 +146,25 @@ The official options and rationale are documented in `docs/integrations/hermes-c
 
 ### SystemRescue translation remains a separate pending task
 Do not mix it with Screenlife. The likely task is Russian translation of SystemRescue 13.02 help material previously extracted to `systemrescue-help-original`. Await the result of Hermes `session_search` for the original task/session and `/usage` compression telemetry. Do not rerun translation until the previous session/result is recovered.
+
+
+---
+
+## Hermes report received — SystemRescue translation recovery, 2026-10-31
+
+Hermes returned session IDs for the historical task. Main translation-related sessions:
+- `20261024_091824_0014f5` — main rescue USB / Russian documentation context.
+- `20261027_233456_340383` — "Продолжай перевод".
+- `20261028_133323_20e490` — subagent "Перевести оставшиеся 8 файлов SystemRescue"; last activity `agent_close`, outputs not independently verified.
+- Parent session `20261028_132200_f170ad` — cited by Hermes in its context report.
+
+Critical corrections:
+- Session `input_tokens` is a cumulative lifetime counter, not the size of the last active prompt. `cache_read_tokens` and `cache_write_tokens` are cumulative prompt-cache counters. Use `last_prompt_tokens` for prompt occupancy.
+- `_proactive_prune_rearm_tokens` is an internal pruning/rearm state value, not current prompt occupancy.
+- "Compression ceiling exhausted" in current Hermes source refers to exhausting a wall-clock compression wait budget, not hitting a model token limit. Historical build/source still needs pinning.
+- The claimed inherent Qwen3.5-9B 70K hard cap is unsupported. Qwen's native context is 262144; the separately verified 2026-10-31 Unsloth runtime was configured at 160000. Historical launch args on 2026-10-24–28 remain to be recovered.
+- Hermes report contains a timestamp inconsistency: session ID prefix `20261024`, but its reported UTC start was in 2024. Raw DB timestamp needs checking.
+
+Full findings and next steps are in the canonical PC Rescue project record: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
+
+Next: verify the translated files' exact names, paths, sizes and hashes; do not retranslate or overwrite existing work.
