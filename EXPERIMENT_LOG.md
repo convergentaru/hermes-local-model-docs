@@ -598,3 +598,34 @@ Known existing provider config uses `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` from 
 **Status:** post-cleanup API verification remains UNKNOWN / BLOCKED by credential mismatch. No service was restarted or altered.
 
 **Next:** repeat one direct API listing + generation test using the existing Hermes Custom provider key from `~/.hermes/.env`, keeping the value hidden. Do not use the internal `llama_api_key_*` file for the wrapper test.
+
+
+---
+
+## 2026-10-31 — post-router-stop Unsloth model and generation test passed
+
+The user repeated the direct API probe with the correct public wrapper credential from `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` in `~/.hermes/.env` (without printing the value).
+
+**Model inventory:**
+- `Qwen3.5-9B-Q4_K_M loaded`.
+- Remaining listed presets were `unloaded`.
+
+**Generation test:**
+- Endpoint: Unsloth public wrapper `127.0.0.1:8888/v1`.
+- Route: `POST /chat/completions`.
+- Prompt requested exact one-line response `UNSLOTH_AFTER_ROUTER_STOP_OK`.
+- Actual response: `UNSLOTH_AFTER_ROUTER_STOP_OK`.
+
+**Status:** VERIFIED. This is the fresh functional API check after the legacy Hermes router was stopped/disabled.
+
+### Combined architecture acceptance
+- One llama-server process after legacy service disable: VERIFIED (user output count 1).
+- Legacy router inactive/disabled: VERIFIED.
+- Hermes Gateway remains active: VERIFIED.
+- Unsloth Qwen loaded and generating after cleanup: VERIFIED.
+- Hermes CLI Custom → Unsloth: VERIFIED.
+- Claude Code v2.1.286 → Unsloth via `--no-serve`: VERIFIED.
+- Full clean-reboot sequence: NOT YET TESTED.
+- Automatic Unsloth startup at boot: NOT CONFIGURED / NOT VERIFIED.
+
+This closes the current runtime recovery phase. Do not repeat previous tests. Next work is to turn the exact known-good manual sequence into a concise startup checklist and, when the user chooses, perform a controlled reboot test.
