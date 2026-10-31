@@ -286,3 +286,15 @@ llama-server process count: 1
 The legacy router had all presets marked `unloaded` before being stopped. Its unit file, model presets and model files remain intact. This achieves the one-server process invariant without touching Unsloth or restarting the Gateway.
 
 Next: make one direct Unsloth API generation request after cleanup. Then document the manual post-reboot startup sequence. Do not label auto-start complete until a real clean reboot is tested.
+
+
+---
+
+## API key scope note — 2026-10-31
+
+Do not use the internal file `~/.unsloth/studio/auth/llama_api_key_*` as the credential for the public Unsloth wrapper endpoint on port 8888 unless explicitly verified. The user's request with that key received HTTP 401.
+
+Unsloth's upstream CI helper obtains the public API key from the `unsloth run` startup banner (`API Key:`, commonly `sk-unsloth-...`) and uses it in the Bearer header for `/v1/models`:
+https://github.com/unslothai/unsloth/blob/main/.github/scripts/serve-unsloth-run.sh
+
+For the existing configuration, use `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` from `~/.hermes/.env` for the public wrapper check. Keep the token out of logs and terminal output.
