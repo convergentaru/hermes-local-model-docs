@@ -91,3 +91,21 @@ After both independent reports are received:
 ## Acceptance criteria
 
 A useful report must be grounded in actual metadata and exact commands, not assumptions. Recommendations must not trigger automatic deletion or modification. The next step is always human review and explicit approval.
+
+
+---
+
+## Superseding long-running version — 2026-10-31
+
+The short one-pass audit above remains a small smoke-test protocol. For the user's requested sustained work, use the expanded staged plan in:
+`docs/operations/LONG-RUNNING-AGENT-WORK-PAPERCLIP.md`.
+
+The expanded task is no longer just a shallow directory-size listing. It has separate work packages:
+- Hermes: measured storage and filesystem inventory.
+- Claude Code: local project/Git workspace inventory.
+- Then sequential cross-review by the other agent.
+- Then a human-reviewed action backlog; no cleanup is automated.
+
+Each agent must checkpoint progress and resume in later Paperclip heartbeats where necessary. Keep the one-slot constraint in mind: stagger agent runs; do not expect simultaneous inference.
+
+The full plan contains sensitive-path exclusions, metadata-only inspection rules, output requirements, and a pre-overnight acceptance gate. Do not enable unattended overnight runs until each Paperclip adapter has passed a local-Qwen routing test and Stop/session-resume behaviour is verified.
