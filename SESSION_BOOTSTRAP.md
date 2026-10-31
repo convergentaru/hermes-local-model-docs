@@ -265,3 +265,23 @@ The user resumed Hermes session `local-bd95986af8a0ecfcfc909532acc3d5ae08730dee0
 This verifies Hermes CLI Custom provider → Unsloth inference. It does not verify messaging-platform inbound routing. Existing Gateway is independently confirmed active as user service, while its logs warn no messaging platforms are enabled and WhatsApp is not paired.
 
 Next task: test Claude Code with the existing Unsloth server and then verify that only one Qwen inference server is running. Do not repeat the Hermes test or restart the Gateway.
+
+
+---
+
+## Latest shared Qwen client acceptance update — 2026-10-31
+
+Claude Code v2.1.286 successfully launched using `unsloth start claude --no-serve`. The displayed model was `Qwen3.5-9B-Q4_K_M`; the exact test prompt `Ответь строго одной строкой: CLAUDE_UNSLOTH_OK` returned `CLAUDE_UNSLOTH_OK`.
+
+Hermes CLI had also passed its independent Custom-provider test, returning `HERMES_UNSLOTH_OK` for the same Qwen model.
+
+Therefore:
+- Unsloth direct API: VERIFIED.
+- Hermes Custom → Unsloth generation: VERIFIED.
+- Claude Code no-serve → Unsloth generation: VERIFIED.
+- Hermes Gateway daemon: VERIFIED RUNNING as a user systemd service.
+- Gateway messaging platforms: NOT CONFIGURED / NOT TESTED.
+- Exact one-inference-server process inventory: pending.
+- Full reboot/startup procedure: pending real reboot test.
+
+Next: one read-only count/details check for exact `llama-server` process names. Do not repeat successful client probes or restart the Gateway.
