@@ -234,3 +234,26 @@ Unit inventory also showed:
 The system-scope query for `hermes-gateway.service` returned not found; that scope is irrelevant because the actual Gateway runs in the user manager.
 
 Next test: a single Hermes CLI one-shot query through the existing Gateway to verify Gateway → Custom provider → Unsloth. No Gateway restart, install, or unit edit is required for this test.
+
+
+---
+
+## Hermes CLI → Unsloth functional smoke test — 2026-10-31
+
+**Status: VERIFIED.**
+
+The user resumed Hermes session `local-bd95986af8a0ecfcfc909532acc3d5ae08730dee0c92b157d4e21eba2c508371`. The restored model was shown as `Qwen3.5-9B-Q4_K_M (custom:unsloth-qwen-160k)`. Previous conversation displayed:
+- User prompt: `Ответь строго одной строкой: HERMES_UNSLOTH_OK`
+- Hermes response: `HERMES_UNSLOTH_OK`
+
+This confirms that the Hermes CLI's custom provider route to the shared Unsloth/Qwen endpoint can generate a response. It does **not** test inbound messaging through Telegram/WhatsApp or other Gateway messaging adapters. The Gateway daemon remains independently confirmed active as a user service; its startup log reported no enabled messaging platforms and WhatsApp unpaired/unconfigured.
+
+Architecture checkpoint:
+- Unsloth Qwen direct API: VERIFIED.
+- Hermes CLI Custom → Unsloth: VERIFIED.
+- Hermes Gateway daemon: VERIFIED RUNNING (user systemd service).
+- Gateway inbound messaging platform: NOT CONFIGURED / NOT TESTED.
+- Claude Code → same Unsloth endpoint: pending fresh retest in this checkpoint.
+- One inference server/model and process inventory should be confirmed once after Claude attachment.
+
+The Hermes CLI output returned to the interactive prompt after showing the resumed one-shot session. Do not treat this as a Gateway failure; the model response itself succeeded.
