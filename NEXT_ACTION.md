@@ -97,3 +97,16 @@ Older items proposing a new two-server/two-agent slots investigation are histori
 
 ### Hermes ↔ Claude Code
 Research is recorded in `docs/integrations/hermes-claude-code.md`. No additional integration is planned now. Keep the two clients independent for Screenlife comparisons; revisit one-way MCP Serve only for a concrete use case.
+
+
+---
+
+## Latest next action — SystemRescue translation output verification (2026-10-31)
+
+The Hermes session-recovery report has arrived. Do not ask the user to repeat task context and do not rerun translation.
+
+First inspect subagent session `20261028_133323_20e490` and parent `20261028_132200_f170ad` for the eight source/output filenames, exact absolute output directory, file sizes, hashes and success/failure details. Confirm that every output file exists and is non-empty. Then compare the local artifacts and decide what reviewed text files should be committed to `convergentaru/pc-rescue-platform`.
+
+Do not overwrite or regenerate translations. Do not build an ISO until output files have been recovered, reviewed and archived.
+
+Detailed audit: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
