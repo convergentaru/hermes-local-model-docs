@@ -577,3 +577,24 @@ This verifies:
 No service or model files were deleted. Both Hermes and Claude Code functional tests had passed before this cleanup. The change can be reversed with `systemctl --user enable --now llama-server.service`, but do not do so for the chosen one-server architecture.
 
 Next: one direct Unsloth Chat Completions test after cleanup; then finish the documented manual boot/start order. A real reboot test is still outstanding.
+
+
+---
+
+## 2026-10-31 — post-router-stop API probe returned 401 due to wrong key source
+
+The user attempted a direct Unsloth wrapper API request to `http://127.0.0.1:8888/v1/models` using the key read from:
+`/home/oleg/.unsloth/studio/auth/llama_api_key_35987dbff07c6310`.
+
+**Observed:** HTTP 401 Unauthorized on `GET /v1/models`. No model listing or generation request followed.
+
+**Interpretation:** this key file is for the internal llama-server authentication path and is not established as the public Unsloth Studio wrapper key. The 401 proves only that the supplied credential was not accepted by the :8888 wrapper; it does not prove the server is down or the model is unloaded.
+
+Official Unsloth source CI helper parses the public API key from the `unsloth run` startup banner (`API Key:`, typically `sk-unsloth-...`) and uses that value for authenticated `/v1/models`. This is distinct from assuming that a `llama_api_key_*` backend key file is accepted by the wrapper:
+https://github.com/unslothai/unsloth/blob/main/.github/scripts/serve-unsloth-run.sh
+
+Known existing provider config uses `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` from `~/.hermes/.env`; this is the candidate wrapper key already used by the successful Hermes Custom → Unsloth smoke test. Do not record or print its value.
+
+**Status:** post-cleanup API verification remains UNKNOWN / BLOCKED by credential mismatch. No service was restarted or altered.
+
+**Next:** repeat one direct API listing + generation test using the existing Hermes Custom provider key from `~/.hermes/.env`, keeping the value hidden. Do not use the internal `llama_api_key_*` file for the wrapper test.
