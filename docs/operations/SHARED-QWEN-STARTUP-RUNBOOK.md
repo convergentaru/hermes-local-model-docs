@@ -207,3 +207,14 @@ Next:
 5. Keep Unsloth PID 10358 alive throughout.
 
 No process was stopped during the inventory. Do not mark one-server acceptance complete yet.
+
+
+---
+
+## Legacy Hermes router ownership identified — 2026-10-31
+
+PID 1823 belongs to the user service `llama-server.service` at port 18434. It is a Hermes-bundled llama.cpp **router mode** process with `--models-max 1 --models-autoload` and a model preset file. Startup log says models are loaded on demand. Process RSS was only 11.4M (peak 242.3M), which suggests no model is currently loaded but does not prove it.
+
+The separate `hermes-qwen35.service` is inactive/dead and disabled; it is not the PID 1823 owner.
+
+Before retiring the router, check its authenticated `GET /models` state and inspect the unit. Stop it only after confirming there are no loaded models and no required dependency. Keep the Unsloth model/server running.
