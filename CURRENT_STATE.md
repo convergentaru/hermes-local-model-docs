@@ -121,3 +121,14 @@ No model change or download is approved now. The current known-good Qwen3.5-9B s
 The 27B candidate is considered a memory-fit risk on RTX 3060 12 GB VRAM + approximately 12 GB system RAM, especially with a 160K context. A 13.1 GB GGUF weight file does not include KV cache and runtime overhead. Reassess only after audio work is complete, then inspect available memory and the existing local Qwen3.6-35B-A3B file before considering a download.
 
 Voice work notes: `docs/voice/qwen3-asr-and-hermes-voice.md`. Current next-step ordering: `NEXT_ACTION.md`.
+
+
+---
+
+## Latest SystemRescue artifact report — 2026-10-31
+
+Hermes reports two files in `/home/oleg/fcm-opencode-test`, with sizes and SHA-256 listed in the canonical PC Rescue audit. The original and translated paths are reported as identical; preserve the files before any editing because the originals may have been overwritten in place. The remaining six outputs were not located in that directory; task transcript filenames are still needed. Filesystem presence and hashes have not been independently verified in this chat.
+
+Latest reported context data: Hermes configured window 131072; auto-compress threshold 100000; historical llama-server `-c 160000`; subagent last prompt 32964. These are distinct settings/measurements. Cache-write counters do not establish compression count. The SSH/QEMU session still has a timestamp discrepancy (session ID 20261024 but reported year 2024).
+
+Detailed record: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
