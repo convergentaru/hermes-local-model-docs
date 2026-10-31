@@ -193,3 +193,16 @@ No process was stopped in this inventory step.
 Authenticated read-only GET requests to `http://127.0.0.1:18434/models` and `/v1/models` returned seven preset models, all with status `unloaded`, including the Qwen3.5-9B preset.
 
 The router process itself was active, but no model instance was loaded there. The active model is served by Unsloth. The idle router's user unit `llama-server.service` is enabled for default.target and can be stopped/disabled without deleting its unit, model presets, or model files. Deactivation is pending user execution and post-change verification.
+
+
+## 15. Idle router cleanup — verified 2026-10-31
+
+The user executed `systemctl --user disable --now llama-server.service`.
+
+Post-check verified:
+- Legacy Hermes router is `inactive`.
+- Legacy Hermes router is `disabled`.
+- Hermes Gateway user service is `active`.
+- Exact process count `pgrep -xc llama-server` is `1`.
+
+This leaves the Unsloth Qwen inference process as the only llama-server process. The old unit and presets remain on disk and can be re-enabled; they were not deleted. A fresh Unsloth API response after the cleanup is the next check.
