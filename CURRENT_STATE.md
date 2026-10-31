@@ -137,3 +137,51 @@ Detailed record: https://github.com/convergentaru/pc-rescue-platform/blob/main/d
 ## Benchmarking standard
 
 All future model comparisons must follow `docs/model-selection/BENCHMARK-PROTOCOL.md`. Separate capability scores from actual local inference speed and agent workflow quality. No model upgrade is decided from parameter count or file size alone.
+
+
+---
+
+## Runtime checkpoint — 2026-10-31 (latest user-provided evidence; supersedes earlier port snapshot)
+
+### Unsloth / Qwen — VERIFIED
+The user launched the existing local model through the Unsloth CLI:
+
+```bash
+unsloth run \
+  --model "/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf" \
+  --context-length 160000 \
+  --gpu-memory-mode manual \
+  --parallel 1 \
+  --port 8888 \
+  --host 127.0.0.1 \
+  --disable-tools
+```
+
+Observed:
+- Unsloth CLI version: `2026.10.11`.
+- Public client endpoint: `http://127.0.0.1:8888/v1`.
+- Internal llama-server port in this run: `53815` (dynamic; do not hardcode).
+- Model loaded and server reported ready.
+- `GET /v1/models`: HTTP 200; Qwen3.5-9B-Q4_K_M reported loaded; configured context 160000; model native/max context reported as 262144.
+- A real `POST /v1/chat/completions` returned HTTP 200 and the expected Russian response. This verifies the Unsloth API path, not yet the Hermes Gateway path.
+- `--disable-tools` was passed to the server. Agent-side tools must be tested independently; do not assume this flag disables or enables client-side Hermes/Claude tools.
+
+### Existing Hermes configuration — OBSERVED
+- `model.provider: custom`.
+- Base URL: `http://127.0.0.1:8888/v1`.
+- Model ID: `Qwen3.5-9B-Q4_K_M`.
+- API mode: `chat_completions`.
+- Configured context: `160000`.
+- `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` was confirmed PRESENT in `~/.hermes/.env`; its value is intentionally not recorded.
+- Piper TTS configuration and voice path were present in the inspected config; no TTS test was performed in this checkpoint.
+
+### systemd state — OBSERVED / INCOMPLETE
+The latest user-provided `systemctl is-active` output showed:
+- `hermes-gateway.service`: `inactive`.
+- `llama-server.service`: `inactive`.
+
+The old `llama-server.service` is the legacy Hermes model server and must remain stopped in the shared-one-model architecture. Do not start it: Unsloth owns the only model server in this design.
+
+The existing Hermes Gateway is not currently verified as running. Its unit definition and journal have not yet been inspected in this checkpoint. Next action is read-only inspection of `systemctl status`, `systemctl cat` and `journalctl` for `hermes-gateway.service`; do not start or edit it before examining the evidence.
+
+This checkpoint supersedes the earlier statement that the Gateway was active at the time of a previous test. Runtime state is time-dependent; preserve earlier successful tests as historical evidence, not as current status.
