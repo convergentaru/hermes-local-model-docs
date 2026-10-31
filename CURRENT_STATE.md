@@ -290,3 +290,21 @@ This is a successful functional smoke test through the Unsloth no-serve connecti
 - Clean reboot and full ordered startup: NOT YET TESTED.
 
 Next: one read-only process inventory using exact process name `llama-server`; avoid broad pgrep patterns that match Hermes wrapper processes. Then complete the final startup runbook with a clear preflight and recovery order. No restart is required now.
+
+
+---
+
+## Final process inventory — two active llama-server processes observed 2026-10-31
+
+The user ran `pgrep -x llama-server` and received count **2**. Exact executable-name process details:
+
+1. **PID 1823**, PPID 1645, executable `/home/oleg/.hermes/tools/llamacpp-cuda-11370-linux-x64/llama-server`, listening argument `--port 18434`. Command includes `--models-max 1 --models-autoload`, metrics/slots, and Hermes preset file `/home/oleg/.hermes/runtimes/llamacpp/presets.ini`. The process command line contains an API key; the secret value is deliberately not recorded.
+2. **PID 10358**, PPID 10257, executable `/home/oleg/.unsloth/llama.cpp/llama-server`, serving `/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf` on internal port `53815`, with `--parallel 1` and `-c 160000`. This is the intended Unsloth-managed Qwen server.
+
+**Interpretation:** two llama-server processes are definitely running, so the one-server invariant is not yet met. However, PID 1823 is a model-management server with `--models-autoload` and a presets file; the process listing alone does not establish whether it currently has a model loaded. Do not say there are two loaded copies of Qwen until the legacy server's model list/runtime is checked.
+
+The legacy process is a child of the user systemd manager (PPID 1645). The user manager previously listed `hermes-qwen35.service` as disabled, but disabled means not enabled for automatic startup; it does not prove the unit is inactive. The exact owner unit for PID 1823 is still **UNKNOWN** and must be identified using `systemctl --user status 1823`, then inspect the corresponding unit and journal.
+
+**Safety:** do not kill PID 1823 or stop any service until the unit owner and currently loaded models are confirmed. Keep Unsloth PID 10358/model running. Do not start any other inference server.
+
+Updated target: identify PID 1823's unit, check whether port 18434 has any model loaded, and only then decide whether the legacy service can be safely stopped to achieve one inference server.
