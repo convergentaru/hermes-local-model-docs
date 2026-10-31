@@ -210,3 +210,24 @@ New context values reported by Hermes:
 Do not derive compression_count from cache_write_tokens. The 131072 Hermes context, 100000 threshold and 160000 server context are separate values; this mismatch needs a historical config/runtime audit. The 70K hard model limit remains unsupported. Session `20261024_094607_8dc40d` still has a year discrepancy (ID suggests 2026, reported timestamp says 2024).
 
 Canonical evidence and action plan: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
+
+
+---
+
+## 2026-10-31 — planned comparative HOME audit: Hermes vs Claude Code
+
+**User request:** have both agents inspect the home directory, provide recommendations/reports, and test whether to run together or sequentially.
+
+**Current architecture:** one shared Unsloth llama-server, one Qwen model, `--parallel 1`. Official llama.cpp docs define `--parallel N` as server slot count and expose `/slots` for processing state; `fail_on_no_slot=1` returns 503 when no slot is available. Thus two client agents do not have two simultaneous generation slots in the present setup.
+
+**Plan:**
+1. Tiny simultaneous no-tools prompt to observe scheduling/wait/timeout behaviour.
+2. Run the same bounded read-only HOME metadata audit sequentially through Hermes and Claude Code.
+3. Cross-review the two reports in alternating clients.
+4. Publish only a sanitized summary; keep private filenames, sensitive directories and raw personal details out of GitHub.
+
+**Safety:** no file contents, credentials, keys, browser profiles or secret configs are to be read. No writes, cleanup, chmod/chown, installs or downloads. Scan depth and output volume are bounded; large files are reported by metadata only.
+
+Protocol and copy/paste prompt: `docs/operations/HOME-DIRECTORY-AUDIT.md`.
+
+**Status:** PLANNED. No HOME filesystem scan has been run by ChatGPT; no local changes have been made.
