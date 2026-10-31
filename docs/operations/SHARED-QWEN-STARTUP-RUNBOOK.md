@@ -105,3 +105,29 @@ journalctl -u hermes-gateway.service -n 40 --no-pager
 ## Текущий следующий шаг
 
 Получить вывод Phase 2 (status, unit, journal) и на его основании определить безопасное восстановление существующего Hermes Gateway. См. также `NEXT_ACTION.md`, `CURRENT_STATE.md` и `EXPERIMENT_LOG.md`.
+
+
+---
+
+## Gateway scope correction — 2026-10-31
+
+The initial system-scope lookup returned `Unit hermes-gateway.service could not be found`. That only means the system manager has no unit by this name. Hermes' current Linux documentation says the normal Gateway install is a user service, located under `~/.config/systemd/user`; a system unit is an explicit `hermes gateway install --system` choice.
+
+Before attempting Phase 2 recovery, use these read-only checks:
+
+```bash
+hermes gateway status
+
+echo "=== USER GATEWAY UNIT ==="
+systemctl --user status hermes-gateway.service --no-pager -l
+
+echo
+echo "=== USER UNIT DEFINITION ==="
+systemctl --user cat hermes-gateway.service
+
+echo
+echo "=== USER GATEWAY JOURNAL ==="
+journalctl --user -u hermes-gateway.service -n 40 --no-pager
+```
+
+Do not install/start/restart the Gateway yet. First determine whether the user unit exists, whether a Gateway process is running outside systemd, or whether this Hermes install uses another service name/profile. Official source: https://hermes-agent.nousresearch.com/docs/user-guide/messaging
