@@ -206,3 +206,14 @@ Post-check verified:
 - Exact process count `pgrep -xc llama-server` is `1`.
 
 This leaves the Unsloth Qwen inference process as the only llama-server process. The old unit and presets remain on disk and can be re-enabled; they were not deleted. A fresh Unsloth API response after the cleanup is the next check.
+
+
+## 16. Single-server cleanup — post-change verification passed 2026-10-31
+
+After the user executed `systemctl --user disable --now llama-server.service`, output confirmed:
+- legacy Hermes router inactive;
+- legacy Hermes unit disabled;
+- Hermes Gateway active;
+- exact `llama-server` process count = 1.
+
+This is the verified state for the one-model/one-server architecture. Legacy service files and presets are preserved. Post-cleanup API smoke test is still pending.
