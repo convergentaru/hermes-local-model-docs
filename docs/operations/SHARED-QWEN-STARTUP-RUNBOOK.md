@@ -235,3 +235,32 @@ systemctl --user disable --now llama-server.service
 This stops the idle router and removes its automatic startup link but preserves the unit file and presets. The command is reversible with `systemctl --user enable --now llama-server.service`. Do not delete model files or unit files.
 
 Then verify Gateway active, old router inactive/disabled, Unsloth still responding, and exactly one llama-server process. Do not restart the Gateway or Unsloth.
+
+
+---
+
+## Legacy router deactivation — completed successfully (2026-10-31)
+
+The user executed:
+```bash
+systemctl --user disable --now llama-server.service
+```
+
+Post-change verification from the user:
+- `llama-server.service`: inactive.
+- `llama-server.service`: disabled.
+- `hermes-gateway.service`: active.
+- `pgrep -xc llama-server`: 1.
+
+Therefore the old empty Hermes router is no longer running or enabled, and the Unsloth-managed Qwen server is the only remaining llama-server process. Gateway stayed active. The legacy unit and model presets were not deleted.
+
+### Final current-state acceptance
+- Unsloth direct API before cleanup: VERIFIED.
+- Hermes CLI Custom → Unsloth: VERIFIED.
+- Claude Code → Unsloth with `--no-serve`: VERIFIED.
+- Hermes Gateway user service: VERIFIED ACTIVE.
+- One llama-server process after legacy cleanup: VERIFIED.
+- Fresh Unsloth generation after cleanup: pending one API smoke test.
+- Clean reboot test: pending; no Unsloth systemd autostart service has been configured.
+
+Do not repeat previous client tests or Gateway diagnostics. Next, run one direct API response test after cleanup, then record the exact manual startup order and expected checks.
