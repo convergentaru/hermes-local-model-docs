@@ -550,3 +550,20 @@ Finalize and review a concise manual startup checklist from the known-good seque
 4. Claude Code attachment via `unsloth start claude --no-serve`.
 
 A true cold-reboot test remains pending. There is no approved/demonstrated Unsloth systemd autostart unit. Do not create one without researching/confirming the Unsloth CLI foreground and shutdown lifecycle. The user may choose a controlled reboot test later; until then label the runbook **manual startup verified at runtime, reboot not tested**.
+
+
+---
+
+## Current status — shared Qwen runtime restored; manual startup checklist documented (2026-10-31)
+
+All current-runtime acceptance checks passed:
+- Unsloth Qwen API after legacy router cleanup returned `UNSLOTH_AFTER_ROUTER_STOP_OK`.
+- Hermes Custom CLI returned `HERMES_UNSLOTH_OK`.
+- Claude Code v2.1.286 using `unsloth start claude --no-serve` returned `CLAUDE_UNSLOTH_OK`.
+- Legacy Hermes router is inactive/disabled.
+- Hermes Gateway is active.
+- Exact `llama-server` process count is one.
+
+The full manual sequence now lives in `docs/operations/SHARED-QWEN-STARTUP-RUNBOOK.md`.
+
+No further runtime changes are required now. A cold reboot test is still pending; Unsloth is manually launched through the CLI and no dedicated boot unit is configured. Only pursue systemd auto-start after researching and validating the CLI lifecycle on this installed version.
