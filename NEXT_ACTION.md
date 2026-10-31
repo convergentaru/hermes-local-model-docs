@@ -110,3 +110,14 @@ First inspect subagent session `20261028_133323_20e490` and parent `20261028_132
 Do not overwrite or regenerate translations. Do not build an ISO until output files have been recovered, reviewed and archived.
 
 Detailed audit: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
+
+
+---
+
+## Future model evaluation (not installed or scheduled)
+
+Research note: `docs/model-selection/2026-10-31-upgrade-candidates.md`.
+
+Before downloading a larger model, perform a read-only inventory of the user's existing Unsloth model collection, especially the previously used `Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf`. If the file exists, validate it and consider a one-model-at-a-time trial. Otherwise consider Qwen3.8-27B `UD-Q3_K_XL` as the new primary candidate.
+
+No configuration change is authorized by this research. Keep the working Qwen3.5-9B baseline intact, one server only, and preserve the 160K target context. Acceptance must include real memory placement, 160K functional stability, tool calling and identical Hermes/Claude Code tests. Do not assume larger parameter count automatically means better speed or quality.
