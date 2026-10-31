@@ -336,3 +336,15 @@ Post-change results:
 The remaining inference process is the Unsloth-managed Qwen3.5-9B server. The old unit/presets remain intact; no model files were removed. The service change is reversible.
 
 A fresh direct Unsloth API generation after this cleanup remains to be checked. Both Hermes and Claude Code have previously passed independent inference tests. The manual startup sequence is recorded; real cold-reboot acceptance is not yet complete. No dedicated systemd Unsloth auto-start has been created.
+
+
+---
+
+## One inference server after legacy-router cleanup — 2026-10-31
+
+The user disabled the legacy Hermes router with `systemctl --user disable --now llama-server.service`. Verification showed:
+- legacy router inactive/disabled;
+- Hermes Gateway active;
+- `pgrep -xc llama-server` returned 1.
+
+Thus exactly one llama-server process remains, the Unsloth-managed Qwen server. Old unit/config/model files are preserved. A post-cleanup direct Unsloth API generation test is the remaining immediate check. Hermes and Claude Code generation probes were already successful. Reboot/startup persistence is not yet verified.
