@@ -187,3 +187,23 @@ Claude Code v2.1.286 displayed model `Qwen3.5-9B-Q4_K_M` and returned exact expe
 Combined with the previous Hermes CLI Custom-provider response `HERMES_UNSLOTH_OK`, both independent clients have now passed real generation smoke tests against the intended Qwen/Unsloth setup.
 
 **Do not repeat** the Hermes or Claude smoke tests and do not restart the Gateway. Remaining immediate acceptance step: count exact `llama-server` processes once and inspect their command lines to verify the one-server invariant. Then update the final run order. A clean reboot test is still outstanding.
+
+
+---
+
+## Process-count audit — 2026-10-31: two llama-server processes found
+
+The final process audit returned 2:
+- PID 1823 — legacy Hermes server, port 18434, Hermes model presets and auto-load manager.
+- PID 10358 — intended Unsloth Qwen server, internal port 53815, context 160000, parallel 1.
+
+The architecture is **not yet one-server-clean** at the process level. The legacy process may be a model-management server without a loaded model; that remains unverified. Do not stop it on process count alone.
+
+Next:
+1. Map PID 1823 to its exact user unit with `systemctl --user status 1823`.
+2. Inspect the identified unit and journal; do not assume it is `hermes-qwen35.service`.
+3. Check the model list of server 18434 with a read-only authenticated request, keeping the API key out of terminal output and logs.
+4. If the server is legacy/unused and has no active model/client dependency, plan a controlled stop of its exact owner unit, then verify the Gateway remains healthy and Hermes continues to use Unsloth.
+5. Keep Unsloth PID 10358 alive throughout.
+
+No process was stopped during the inventory. Do not mark one-server acceptance complete yet.
