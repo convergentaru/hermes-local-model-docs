@@ -56,3 +56,29 @@ Error: Input must be provided either through stdin or as a prompt argument when 
 В работающем процессе наблюдались `-c 238592`, `--parallel 4`, `--fit off`. API сообщал `n_ctx=238592` и `n_ctx_train=262144`. VRAM в том снимке была занята на 11,425 MiB из 12,288 MiB.
 
 **Статус:** OBSERVED. Не переносить эти параметры автоматически на Qwen3.5-9B.
+
+
+---
+
+## 2026-10-31 — аудит systemd Hermes и первая попытка jcode → Unsloth
+
+**Сервисная схема по read-only аудиту пользователя:**
+- `llama-server.service`: Hermes llama-server, `127.0.0.1:18434`, preset `/home/oleg/.hermes/runtimes/llamacpp/presets.ini`.
+- `hermes-gateway.service`: отдельный unit; `After/Wants=network-online.target`; нет `Requires`, `BindsTo` или `PartOf` к llama-server.
+- Hermes config: Qwen3.5-9B-Q4_K_M, provider llamacpp, `http://127.0.0.1:18434/v1`, chat_completions, fallback Ministral.
+- Пользователь подтвердил LISTEN Unsloth llama-server на `:52681`, PID `212601`.
+
+**Действие:** пользователь выполнил `systemctl --user stop llama-server.service`, затем запустил:
+```bash
+jcode --provider-profile unsloth-qwen run 'Reply exactly: JCODE_UNSLOTH_OK'
+```
+
+**Результат:** FAILED. jcode попытался обратиться к `http://127.0.0.1:52681/v1/chat/completions`, но получил TCP Connection refused (os error 111). HTTP-ответа не было; значит этот тест не проверил ключ или заголовок авторизации.
+
+**Отдельный предыдущий результат:** `jcode --provider-profile unsloth-qwen auth-test` показал credential_probe available, но model discovery завершился HTTP 401 `Missing bearer authentication in header`. Это отдельное наблюдение; не смешивать с TCP refusal.
+
+**Статус Unsloth worker:** UNKNOWN / no listener at time of direct jcode run. Причина исчезновения listener не установлена; не приписывать это остановке Hermes service.
+
+**Безопасность:** в присланном unit-файле был виден API key. Значение не записано в журнал и не включается в репозиторий. Рекомендуется заменить/ротировать.
+
+**NEXT_ACTION:** заново загрузить существующую Qwen через Unsloth GUI, определить актуальный порт, затем отдельно повторить прямой jcode smoke test.
