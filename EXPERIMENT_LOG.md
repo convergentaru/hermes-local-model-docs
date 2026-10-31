@@ -107,3 +107,21 @@ jcode --provider-profile unsloth-qwen run 'Reply exactly: JCODE_UNSLOTH_OK'
 **Дополнительные записи:** `docs/integrations/hermes-claude-code.md`, `SESSION_BOOTSTRAP.md`, `CURRENT_STATE.md`, `NEXT_ACTION.md`.
 
 **Статус:** VERIFIED — документация изучена, решение зафиксировано; runtime-конфигурации не менялись.
+
+
+---
+
+## 2026-10-31 — Hermes session recovery for SystemRescue translation; context audit correction
+
+Hermes returned historical session IDs, including a parent work session, a translation continuation session and a subagent session named "Перевести оставшиеся 8 файлов SystemRescue". The subagent's last activity was `agent_close`; this is a reported completion state, not proof that its output files remain present or are correct.
+
+The Hermes report's explanation of the 70K limit is not accepted as fact:
+- Input/output/cache token counters are cumulative session counters.
+- Current Hermes session schema has a separate `last_prompt_tokens` field for the latest actual prompt.
+- `_proactive_prune_rearm_tokens` is a pruning/rearm marker, not context occupancy.
+- Current Hermes compression facade describes "total ceiling exhausted" as a wall-clock timeout on compression; the code explicitly states no messages were dropped and the turn continues without compression.
+- Qwen3.5-9B native context is 262144; later verified Unsloth launch used 160000. Historical launch arguments from Oct 24–28 are still needed.
+
+The report also contains a likely timestamp data issue: session ID prefix `20261024` is paired with a claimed UTC start in 2024. Read the raw record.
+
+Detailed evidence, version caveats and recovery plan: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
