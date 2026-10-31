@@ -156,3 +156,18 @@ hermes chat --oneshot -q "Ответь строго одной строкой: H
 A model-generated `HERMES_UNSLOTH_OK` confirms the local Hermes CLI/Gateway request path against the configured Custom Unsloth endpoint. Capture errors exactly if the request fails. Do not restart the Gateway before this test.
 
 Official Hermes docs: https://hermes-agent.nousresearch.com/docs/user-guide/messaging and https://hermes-agent.nousresearch.com/docs/reference/cli-commands
+
+
+---
+
+## Phase 2 result — existing Hermes and Unsloth inference route verified (2026-10-31)
+
+The existing Gateway daemon is active/enabled as a user service. The Hermes CLI smoke test also succeeded: Hermes restored model `Qwen3.5-9B-Q4_K_M (custom:unsloth-qwen-160k)` and returned the exact expected response `HERMES_UNSLOTH_OK` to the test prompt.
+
+Acceptance distinction:
+- Hermes CLI → Custom provider → Unsloth: **VERIFIED**.
+- Gateway daemon process: **VERIFIED RUNNING**.
+- Gateway inbound messaging integrations: **NOT CONFIGURED / NOT TESTED** (startup says no messaging platforms enabled; WhatsApp is unpaired).
+Do not mark messaging adapters as verified based on the CLI test.
+
+The Gateway does not need to be restarted for the next step. Proceed to Claude Code against the already-running Unsloth endpoint.
