@@ -211,3 +211,51 @@ Detailed role split, multi-phase work and safety gates:
 No local scan has been run and no agent has been launched by ChatGPT. The user needs to paste Task 1 into a fresh Hermes session, then Task 2 into a fresh Claude Code session. Do not run both full tasks simultaneously: one Qwen server slot serializes them. After reports arrive, perform reciprocal review.
 
 Paperclip unattended/overnight configuration remains **NOT ENABLED** until adapter smoke tests confirm that both agents stay on the existing custom Unsloth/Qwen endpoint, sessions resume across heartbeats, and Stop controls work.
+
+
+---
+
+## Latest active task — recover existing Hermes Gateway without starting a second model server (2026-10-31)
+
+### Verified baseline
+- Unsloth CLI `unsloth run` loaded `Qwen3.5-9B-Q4_K_M.gguf` with context 160000 and `--parallel 1`.
+- Client endpoint `http://127.0.0.1:8888/v1` returned HTTP 200 for both model listing and a real Chat Completions generation request.
+- Internal llama-server port `53815` is dynamic; do not use it as the client endpoint.
+- Hermes config already points to this endpoint using Custom / Chat Completions, model ID `Qwen3.5-9B-Q4_K_M`, context 160000.
+- Hermes API-key environment variable is present in `~/.hermes/.env`; do not publish its value.
+- Latest service status: `hermes-gateway.service = inactive`; `llama-server.service = inactive`.
+
+### Immediate next step — read-only Gateway diagnosis
+The user has been asked to run:
+
+```bash
+echo "=== GATEWAY UNIT ==="
+systemctl status hermes-gateway.service --no-pager -l
+
+echo
+echo "=== GATEWAY UNIT CONFIG ==="
+systemctl cat hermes-gateway.service
+
+echo
+echo "=== RECENT GATEWAY LOG ==="
+journalctl -u hermes-gateway.service -n 40 --no-pager
+```
+
+Wait for this output before taking action. Determine whether the Gateway exited, failed, was stopped intentionally, or lacks required environment/config. Do not infer the cause.
+
+### Hard constraints
+1. Keep the currently running Unsloth session open; do not close its terminal.
+2. Do not start `llama-server.service`: it is the legacy Hermes model server and would violate the one-model/one-server design.
+3. Do not start a second `llama-server` manually.
+4. Do not run `unsloth start hermes`; that creates a managed Hermes instance and risks bypassing the existing Gateway/config/memory.
+5. Preserve Hermes Gateway, memory, sessions, Piper TTS and existing configuration. No edits until the unit/journal have been inspected.
+6. Once the Gateway is diagnosed and restored, verify a real Hermes request through the existing Gateway and confirm it reaches the Unsloth endpoint.
+7. Then verify Claude Code attaches to the same running Unsloth service without starting another model server. Use the installed CLI's actual help/known-good workflow; do not guess flags.
+8. After every successful or failed step, append evidence to `EXPERIMENT_LOG.md` and update `CURRENT_STATE.md` / `NEXT_ACTION.md` as appropriate.
+
+### Current status
+- Unsloth model load and direct API: VERIFIED.
+- Hermes provider configuration and env variable presence: OBSERVED.
+- Existing Hermes Gateway: INACTIVE; cause UNKNOWN; diagnosis pending.
+- Legacy Hermes llama-server service: INACTIVE; intentionally keep it that way.
+- Claude Code connection in this latest runtime: NOT YET RETESTED.
