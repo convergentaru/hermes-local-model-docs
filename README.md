@@ -73,6 +73,10 @@
 - [Qwen3-ASR, STT и TTS: текущие результаты и план интеграции](docs/voice/qwen3-asr-and-hermes-voice.md)
 - [Первый разговор с Hermes Desktop: текст, микрофон и озвучивание](docs/voice/hermes-desktop-first-voice-test.md)
 
+### Выбор моделей
+
+- [Кандидаты для обновления модели Hermes + Claude Code](docs/model-selection/2026-10-31-upgrade-candidates.md) — Qwen3.8-27B и ранее использовавшаяся Qwen3.6-35B-A3B; без изменения текущей конфигурации.
+
 ### Интеграции
 
 - [Hermes ↔ Claude Code: варианты интеграции и решение](docs/integrations/hermes-claude-code.md) — исследование и решение пока не настраивать MCP.
