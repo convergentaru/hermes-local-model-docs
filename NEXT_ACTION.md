@@ -508,3 +508,17 @@ The legacy Hermes router was empty (all seven presets unloaded) before being sto
 Next run one direct authenticated request to `http://127.0.0.1:8888/v1`, reading the API token from the existing Unsloth key file but never printing it. This is a post-cleanup health test. Hermes and Claude Code already passed exact response tests; do not repeat their tests unless the direct request fails.
 
 After the API check, consolidate the exact manual startup sequence. Do not create a dedicated Unsloth systemd unit or change auto-start until the installed CLI foreground/lifecycle behaviour is confirmed. Clean reboot acceptance remains pending.
+
+
+---
+
+## Correction — use the Unsloth wrapper key, not the internal llama-server key (2026-10-31)
+
+The post-cleanup request to `http://127.0.0.1:8888/v1/models` returned HTTP 401 because the test extracted a key from `~/.unsloth/studio/auth/llama_api_key_*`. That file is not established as the public wrapper credential.
+
+The official Unsloth helper parses the API key printed by `unsloth run` in the startup banner (`API Key:`, normally `sk-unsloth-...`) and sends it to `/v1/models`. See:
+https://github.com/unslothai/unsloth/blob/main/.github/scripts/serve-unsloth-run.sh
+
+Use the already-configured `HERMES_CUSTOM_127_0_0_1_8888_API_KEY` from `~/.hermes/.env`, whose presence has been confirmed and which is the credential configured for Hermes Custom → Unsloth. Never print it.
+
+One next test: GET `/v1/models` and send one `/v1/chat/completions` request through port 8888 with that existing key. If it succeeds, post-cleanup Unsloth health is VERIFIED. Do not change keys, restart services, or repeat the Hermes/Claude client probes.
