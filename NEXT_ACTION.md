@@ -304,3 +304,21 @@ Expected: model-generated response `HERMES_UNSLOTH_OK`. Capture the complete out
 Do not run a second test, alter the provider, start a service, or touch `hermes-qwen35.service` until the first result is reviewed.
 
 After success: test Claude Code on the already-running Unsloth server, then check the process list once to ensure one inference server. Gateway messaging platform setup (e.g. WhatsApp/Telegram) is a separate optional task and must not be mixed into this local CLI inference test.
+
+
+---
+
+## Latest active task — Claude Code → shared Unsloth smoke test (2026-10-31)
+
+### Newly verified
+Hermes CLI successfully resumed session `local-bd95986af8a0ecfcfc909532acc3d5ae08730dee0c92b157d4e21eba2c508371` with restored model `Qwen3.5-9B-Q4_K_M (custom:unsloth-qwen-160k)`. The test prompt `Ответь строго одной строкой: HERMES_UNSLOTH_OK` produced the exact expected response `HERMES_UNSLOTH_OK`.
+
+Therefore Hermes CLI → Custom provider → Unsloth is VERIFIED. No need to repeat the Hermes smoke test.
+
+### Keep separate
+The Gateway daemon is active and enabled as a user service, but its logs say no messaging platforms are enabled. WhatsApp is unpaired and has no bot credential. Do not confuse Gateway daemon health with inbound messaging-platform readiness. Do not configure messaging platforms as part of the local model smoke test unless the user asks.
+
+### One next step
+Verify Claude Code against the already-running Unsloth endpoint, without starting another inference server. The historical successful route used `unsloth start claude --no-serve`, but first rely on the installed CLI's exact supported invocation / existing known-good profile and retain the current Unsloth process. After Claude returns a real model response, inspect the process list once and confirm there is only one Qwen inference server.
+
+Do not repeat Gateway diagnostics, restart its service, start legacy `llama-server.service`, or rerun the successful Hermes probe.
