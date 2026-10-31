@@ -75,6 +75,9 @@
 
 ### Выбор моделей
 
+- [Протокол benchmark моделей и производительности](docs/model-selection/BENCHMARK-PROTOCOL.md) — повторяемые измерения TTFT, prefill/generation, VRAM/RAM, качества tool calling и корректности задач.
+
+
 - [Кандидаты для обновления модели Hermes + Claude Code](docs/model-selection/2026-10-31-upgrade-candidates.md) — Qwen3.8-27B и ранее использовавшаяся Qwen3.6-35B-A3B; без изменения текущей конфигурации.
 
 ### Интеграции
