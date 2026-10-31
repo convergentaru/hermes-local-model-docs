@@ -73,3 +73,51 @@ unsloth start claude --model /home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf --
 - Не печатать API keys, токены и секретные конфиги.
 - Не менять параметры контекста, parallel или offload без оценки RAM/VRAM.
 - Перед правкой профиля сохранить резервную копию или зафиксировать исходные значения.
+
+
+## 7. Unsloth CLI — current 2026-10-31 runtime checkpoint
+
+**Status:** VERIFIED for model load and direct OpenAI-compatible API generation.
+
+Exact user-executed command:
+
+```bash
+unsloth run \
+  --model "/home/oleg/.hermes/models/Qwen3.5-9B-Q4_K_M.gguf" \
+  --context-length 160000 \
+  --gpu-memory-mode manual \
+  --parallel 1 \
+  --port 8888 \
+  --host 127.0.0.1 \
+  --disable-tools
+```
+
+Observed:
+- Unsloth CLI `2026.10.11`.
+- Client API: `http://127.0.0.1:8888/v1`.
+- Internal llama-server port: `53815` in this run only; dynamic.
+- Model loaded and server ready.
+- `/v1/models` returned HTTP 200 and reported Qwen3.5-9B-Q4_K_M loaded, context 160000, native/max context 262144.
+- A real Chat Completions request returned HTTP 200 and the expected response.
+
+Do not substitute the internal port for the Unsloth API endpoint. Do not replace this launch with a direct `llama-server` command; Unsloth CLI is the required lifecycle manager for this setup.
+
+Note: `--disable-tools` was present. Verify agent-side tool execution separately before claiming full agent functionality.
+
+## 8. Hermes Custom provider — current configuration observed 2026-10-31
+
+**Status:** OBSERVED; Gateway runtime test pending.
+
+- Provider: `custom`.
+- Base URL: `http://127.0.0.1:8888/v1`.
+- Model: `Qwen3.5-9B-Q4_K_M`.
+- API mode: `chat_completions`.
+- Configured context: `160000`.
+- Environment variable name: `HERMES_CUSTOM_127_0_0_1_8888_API_KEY`; confirmed present in `~/.hermes/.env`. Secret value is not documented.
+- Fallback model configured: `Ministral-3-3B-Instruct-2512-Q4_K_M`; fallback behaviour has not been tested in this checkpoint.
+
+The config is pointed at the correct Unsloth API. This alone does not prove the systemd Gateway has loaded the environment or can complete a request.
+
+## 9. Legacy Hermes model service
+
+Latest observed status: `llama-server.service = inactive`. Keep it inactive while Unsloth owns the single Qwen inference server. Do not start it as part of Hermes Gateway recovery.
