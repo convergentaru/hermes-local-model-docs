@@ -285,3 +285,16 @@ Therefore:
 - Full reboot/startup procedure: pending real reboot test.
 
 Next: one read-only count/details check for exact `llama-server` process names. Do not repeat successful client probes or restart the Gateway.
+
+
+---
+
+## Critical process inventory update — 2026-10-31
+
+The latest exact-name process inventory returned **two** active `llama-server` processes:
+- PID 1823, Hermes llama.cpp, legacy port 18434, Hermes presets / `--models-autoload`.
+- PID 10358, Unsloth llama.cpp, dynamic internal port 53815, loading Qwen3.5-9B-Q4_K_M with context 160K.
+
+This means the one-server process invariant is not yet met. It remains unknown whether the old Hermes server at 18434 currently has any model loaded. PID 1823 is a child of user systemd manager; map it to the exact unit via `systemctl --user status 1823`. A disabled unit may still be active in the current session.
+
+Do not kill/stop PID 1823 or touch the Unsloth process until the owning unit and loaded model list on 18434 are verified. Hermes and Claude Code successful generation through Unsloth remain valid; they do not prove that the legacy server is absent.
