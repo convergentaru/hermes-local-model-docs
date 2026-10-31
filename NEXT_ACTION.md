@@ -465,3 +465,30 @@ pgrep -xc llama-server || true
 ```
 
 Expected: legacy router inactive/disabled; Gateway active; exactly one llama-server (Unsloth). Then perform one final HTTP smoke test against Unsloth (not another full Hermes/Claude test). Do not close or restart the Unsloth server.
+
+
+---
+
+## Latest active step — post-cleanup Unsloth API smoke test (2026-10-31)
+
+The user successfully ran `systemctl --user disable --now llama-server.service`.
+
+Verified output:
+- Legacy router: inactive / disabled.
+- Hermes Gateway: active.
+- Exact llama-server process count: 1.
+
+The one-server process invariant is now achieved. No model or unit files were deleted.
+
+### One next check
+Perform one direct API generation request against the remaining Unsloth endpoint on `127.0.0.1:8888/v1`, using the key file configured for the Unsloth llama-server without printing it. This verifies the intended server still responds after stopping the legacy router. Do not repeat both agent tests (they already passed).
+
+Then finalize the manual startup sequence:
+1. Start Unsloth in a terminal with the known-good `unsloth run` command; keep the terminal/process alive.
+2. Confirm loaded model and API generation.
+3. Confirm Gateway user service is active (already enabled; no restart needed).
+4. Hermes CLI uses the existing Custom profile.
+5. Launch Claude Code with `unsloth start claude --no-serve`.
+6. Verify one llama-server process.
+
+A true clean-reboot exercise and automatic Unsloth service remain explicitly unverified. Do not create a systemd Unsloth service without inspecting the installed CLI's supported lifecycle/foreground behaviour first.
