@@ -264,3 +264,25 @@ Therefore the old empty Hermes router is no longer running or enabled, and the U
 - Clean reboot test: pending; no Unsloth systemd autostart service has been configured.
 
 Do not repeat previous client tests or Gateway diagnostics. Next, run one direct API response test after cleanup, then record the exact manual startup order and expected checks.
+
+
+---
+
+## Single-server invariant achieved — verified 2026-10-31
+
+The user executed:
+```bash
+systemctl --user disable --now llama-server.service
+```
+
+Post-change results:
+```text
+Legacy server: inactive
+Legacy unit: disabled
+Hermes Gateway: active
+llama-server process count: 1
+```
+
+The legacy router had all presets marked `unloaded` before being stopped. Its unit file, model presets and model files remain intact. This achieves the one-server process invariant without touching Unsloth or restarting the Gateway.
+
+Next: make one direct Unsloth API generation request after cleanup. Then document the manual post-reboot startup sequence. Do not label auto-start complete until a real clean reboot is tested.
