@@ -357,3 +357,25 @@ After the operation verify:
 - exactly one `llama-server` process remains (the Unsloth process).
 
 No service state change has been performed yet.
+
+
+---
+
+## Legacy router successfully disabled — one-server invariant achieved (2026-10-31)
+
+The user executed:
+```bash
+systemctl --user disable --now llama-server.service
+```
+
+User-provided post-change verification:
+- Legacy `llama-server.service`: `inactive`.
+- Legacy `llama-server.service`: `disabled`.
+- `hermes-gateway.service`: `active`.
+- `pgrep -xc llama-server`: `1`.
+
+This confirms that only one llama-server process remains after disabling the empty Hermes router. The remaining process is the Unsloth-managed Qwen3.5-9B server (previously PID 10358; PID is dynamic). Hermes Gateway remained active. The legacy unit/model presets have not been deleted; the change is reversible.
+
+**One remaining immediate check:** verify Unsloth still returns a fresh API response after the router stop. The earlier Hermes and Claude success tests occurred before this service-state change; do not repeat both agent tests unless the direct API check fails.
+
+The intended launch sequence is now documented, but clean reboot/autostart acceptance is still pending. Do not claim that a systemd-managed Unsloth auto-start is configured: Unsloth remains launched by the known-good CLI command in a terminal.
