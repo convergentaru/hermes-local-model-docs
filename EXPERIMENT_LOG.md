@@ -521,3 +521,35 @@ Observed:
 **Planned action:** `systemctl --user disable --now llama-server.service`, which stops the idle router and removes its automatic start link. This preserves the unit file and model presets. It is a reversible service-state change, not deletion. This command has not yet been run by the user.
 
 **Post-change acceptance:** check old unit inactive/disabled; Gateway user service still active; Unsloth API remains functional; exact `llama-server` process count is 1. Do not stop Unsloth.
+
+
+---
+
+## 2026-10-31 — disabled idle legacy Hermes router; one-server invariant achieved
+
+**User-executed command:**
+```bash
+systemctl --user disable --now llama-server.service
+```
+
+**Post-change user-provided output:**
+```text
+=== LEGACY SERVER ===
+inactive
+disabled
+=== HERMES GATEWAY ===
+active
+=== LLAMA SERVER COUNT ===
+1
+```
+
+**Result:**
+- Legacy Hermes router on port 18434 is stopped and disabled from automatic user-service startup.
+- Hermes Gateway remains active.
+- Exactly one llama-server process remains; this is the intended Unsloth Qwen process.
+- No model files, preset files or unit files were deleted. The service change is reversible.
+- Both Hermes CLI and Claude Code had already passed their functional smoke tests through Unsloth before this deactivation.
+
+**Status:** VERIFIED for service deactivation, Gateway preservation and process count = 1.
+
+**Remaining:** one fresh direct Unsloth API generation test after disabling the legacy router. Then the manual post-reboot startup sequence can be consolidated. A real reboot test remains outstanding.
