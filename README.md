@@ -73,6 +73,10 @@
 - [Qwen3-ASR, STT и TTS: текущие результаты и план интеграции](docs/voice/qwen3-asr-and-hermes-voice.md)
 - [Первый разговор с Hermes Desktop: текст, микрофон и озвучивание](docs/voice/hermes-desktop-first-voice-test.md)
 
+### Интеграции
+
+- [Hermes ↔ Claude Code: варианты интеграции и решение](docs/integrations/hermes-claude-code.md) — исследование и решение пока не настраивать MCP.
+
 ### Кодовые агенты
 
 - [Aider и Little-coder: установка, тесты, ограничения контекста](docs/coding-agents/aider-and-little-coder.md)
