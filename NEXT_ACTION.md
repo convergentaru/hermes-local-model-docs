@@ -427,3 +427,41 @@ Do not stop `llama-server.service` until:
 3. Service/unit dependency is understood.
 
 Keep Unsloth PID 10358 alive; do not repeat Hermes or Claude smoke tests.
+
+
+---
+
+## Immediate next action — stop/disable the confirmed empty legacy router (2026-10-31)
+
+Evidence is now complete:
+- PID 1823 is owned by user unit `llama-server.service` on port 18434.
+- Both `/models` and `/v1/models` list all seven presets as `unloaded`, including Qwen3.5-9B.
+- Router runs in model-autoload mode but currently holds no model.
+- Hermes provider is Custom → Unsloth and Hermes CLI passed the exact `HERMES_UNSLOTH_OK` test.
+- Claude Code v2.1.286 passed `CLAUDE_UNSLOTH_OK` via `unsloth start claude --no-serve`.
+- Hermes Gateway runs independently as an active user unit; its unit did not declare a dependency on `llama-server.service`.
+
+### Planned reversible change — not yet performed
+
+```bash
+systemctl --user disable --now llama-server.service
+```
+
+This disables the legacy unit's automatic startup and stops the idle router in the user manager. It leaves the unit file/presets/model files intact. Re-enable recovery command (do not run now): `systemctl --user enable --now llama-server.service`.
+
+After executing, verify:
+```bash
+echo "=== LEGACY ROUTER ==="
+systemctl --user is-active llama-server.service || true
+systemctl --user is-enabled llama-server.service || true
+
+echo
+echo "=== HERMES GATEWAY ==="
+systemctl --user is-active hermes-gateway.service
+
+echo
+echo "=== LLAMA SERVER COUNT ==="
+pgrep -xc llama-server || true
+```
+
+Expected: legacy router inactive/disabled; Gateway active; exactly one llama-server (Unsloth). Then perform one final HTTP smoke test against Unsloth (not another full Hermes/Claude test). Do not close or restart the Unsloth server.
