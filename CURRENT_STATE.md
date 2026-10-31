@@ -84,3 +84,14 @@ The older state blocks above contain historical snapshots and should not be trea
 Hermes/Claude integration research: `docs/integrations/hermes-claude-code.md`. Decision: no additional MCP/ACP/import integration yet; keep agents independent for Screenlife testing.
 
 See `SESSION_BOOTSTRAP.md` for the authoritative recovery summary and `NEXT_ACTION.md` for pending work.
+
+
+---
+
+## Latest SystemRescue translation recovery update — 2026-10-31
+
+Hermes restored prior session IDs and reports that the remaining eight help files were translated by a subagent in session `20261028_133323_20e490` (`agent_close`). The actual outputs have not yet been located or verified.
+
+The old statement that Qwen3.5-9B has an inherent 70K hard context limit is unsupported. Cumulative session token counters must not be mistaken for the last prompt size. The exact compression-ceiling message indicates a time-bounded compression operation in current Hermes source, not a model context ceiling; the historical Hermes build must still be matched to source.
+
+Canonical detailed audit: https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md
