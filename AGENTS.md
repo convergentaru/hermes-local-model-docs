@@ -43,3 +43,12 @@
 ## Benchmarking requirement
 
 For model selection, upgrades, quantization or inference tuning, use `docs/model-selection/BENCHMARK-PROTOCOL.md`. Compare actual TTFT, prefill/generation throughput, peak VRAM/RAM, context stability, tool-call success and task correctness. Keep standardized model capability benchmarks separate from local runtime measurements and agent workflow tests. Never recommend a larger model from parameter count or GGUF file size alone.
+
+
+## Long-running task execution and Paperclip
+
+When work spans multiple sessions, split it into explicit phases with durable checkpoints. A task is not complete merely because one heartbeat or CLI session ended. Record completed phases, next action, artifact paths, and status. For Paperclip tasks, update issue/task status and comments before a heartbeat ends; resume persistent sessions rather than starting again.
+
+The local workstation currently has one Unsloth inference slot. Stagger Hermes and Claude Code heartbeats for long model-intensive jobs; do not schedule them simultaneously expecting parallel generation. Before unattended overnight work, verify adapter routing to the custom local endpoint, task persistence, timeout/Stop, and sensitive-path exclusions.
+
+For the approved HOME audit, follow `docs/operations/LONG-RUNNING-AGENT-WORK-PAPERCLIP.md`. Initial work is read-only; no automatic cleanup.
