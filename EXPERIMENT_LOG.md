@@ -405,3 +405,33 @@ Hermes: HERMES_UNSLOTH_OK
 **Status:** VERIFIED for Hermes CLI inference through Custom/Unsloth. Messaging-platform integration remains NOT CONFIGURED / NOT TESTED. No service restart or configuration change was required for this test.
 
 **Next:** fresh Claude Code smoke test against the already running Unsloth endpoint; then one process/model inventory to ensure no second inference server appeared.
+
+
+---
+
+## 2026-10-31 — Claude Code → Unsloth functional smoke test passed
+
+**Launch command executed by user:**
+```bash
+unsloth start claude --no-serve
+```
+
+**Claude Code output:**
+```text
+Claude Code v2.1.286
+Qwen3.5-9B-Q4_K_M · API Usage Billing
+
+User: Ответь строго одной строкой: CLAUDE_UNSLOTH_OK
+
+Claude: CLAUDE_UNSLOTH_OK
+
+Crunched for 21s · done 14:36
+```
+
+**Result:** exact expected response received. Claude Code v2.1.286 successfully generated through the Unsloth `--no-serve` route using Qwen3.5-9B-Q4_K_M.
+
+**Combined result:** both clients passed independent functional text tests:
+- Hermes CLI Custom profile `custom:unsloth-qwen-160k` → `HERMES_UNSLOTH_OK`.
+- Claude Code via `unsloth start claude --no-serve` → `CLAUDE_UNSLOTH_OK`.
+
+**Status:** VERIFIED for both client generation paths. This does not by itself establish that the exact same single llama-server process was the only inference process after both launches; perform one read-only exact-name process inventory next. Do not restart services or relaunch models.
