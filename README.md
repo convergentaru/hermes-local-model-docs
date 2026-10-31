@@ -129,3 +129,11 @@
 - [llama.cpp](https://github.com/ggml-org/llama.cpp)
 - [Aider](https://aider.chat/)
 - [Little-coder](https://github.com/itayinbarr/little-coder)
+
+
+## Актуальная процедура запуска общей Qwen
+
+- [Поэтапный runbook: Unsloth + Hermes + Claude Code](docs/operations/SHARED-QWEN-STARTUP-RUNBOOK.md) — проверенная команда запуска Unsloth и текущие незавершённые этапы восстановления Gateway, подключения Claude Code и проверки после reboot.
+- [Текущее состояние](CURRENT_STATE.md)
+- [Следующее действие](NEXT_ACTION.md)
+- [Журнал экспериментов](EXPERIMENT_LOG.md)
