@@ -308,3 +308,22 @@ The legacy process is a child of the user systemd manager (PPID 1645). The user 
 **Safety:** do not kill PID 1823 or stop any service until the unit owner and currently loaded models are confirmed. Keep Unsloth PID 10358/model running. Do not start any other inference server.
 
 Updated target: identify PID 1823's unit, check whether port 18434 has any model loaded, and only then decide whether the legacy service can be safely stopped to achieve one inference server.
+
+
+---
+
+## Legacy llama-server owner identified — 2026-10-31
+
+The user ran `systemctl --user status 1823`, which mapped PID 1823 to the exact unit:
+- `llama-server.service`
+- User unit file: `/home/oleg/.config/systemd/user/llama-server.service`
+- State: `active (running)`, `enabled`.
+- Main PID: 1823.
+- Port: 18434.
+- Executable: Hermes-bundled llama.cpp router.
+- Arguments include `--models-max 1 --models-autoload` and `--models-preset /home/oleg/.hermes/runtimes/llamacpp/presets.ini`.
+- Startup log explicitly states router mode and on-demand model loading.
+- Observed memory: 11.4M current, peak 242.3M; no evidence in this status output that a model is loaded.
+- `hermes-qwen35.service` is `inactive (dead)`, unit file loaded but disabled; description says it is the Hermes local Qwen3.5-4B server. It is not the owner of PID 1823.
+
+The old server is therefore a model router/manager that is active as a process, but loaded model state remains **UNKNOWN**. The next check must query its read-only router `/models` endpoint and inspect the unit definition. Do not stop it until that result confirms no model is loaded and its dependencies are understood.
