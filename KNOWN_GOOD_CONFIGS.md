@@ -143,3 +143,17 @@ Gateway process health and messaging-platform readiness are separate:
 - No env allowlists are configured; the documented pairing policy remains in effect.
 
 Do not reinstall or restart this working service as part of the shared-model recovery. The next test is a fresh Hermes one-shot request through the existing Gateway.
+
+
+## 11. Hermes CLI → Unsloth Custom provider smoke test — 2026-10-31
+
+**Status: VERIFIED.**
+
+User resumed session `local-bd95986af8a0ecfcfc909532acc3d5ae08730dee0c92b157d4e21eba2c508371`.
+Restored model: `Qwen3.5-9B-Q4_K_M (custom:unsloth-qwen-160k)`.
+
+The exact prompt and answer in the prior conversation were:
+- Prompt: `Ответь строго одной строкой: HERMES_UNSLOTH_OK`
+- Answer: `HERMES_UNSLOTH_OK`
+
+This verifies Hermes CLI text generation through the configured Custom provider. It is not a test of Telegram/WhatsApp or other Gateway inbound messaging channels. Gateway daemon process health is separately verified; current Gateway startup said no messaging platforms are enabled.
