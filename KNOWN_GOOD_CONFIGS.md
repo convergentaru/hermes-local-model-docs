@@ -186,3 +186,10 @@ Observed processes:
 The first process is a model-management server; whether it has a model loaded is not yet confirmed. Do not classify it as a second loaded Qwen instance without checking `/v1/models` on port 18434. Its owner unit must be identified using `systemctl --user status 1823`.
 
 No process was stopped in this inventory step.
+
+
+## 14. Legacy Hermes router — all presets unloaded (2026-10-31)
+
+Authenticated read-only GET requests to `http://127.0.0.1:18434/models` and `/v1/models` returned seven preset models, all with status `unloaded`, including the Qwen3.5-9B preset.
+
+The router process itself was active, but no model instance was loaded there. The active model is served by Unsloth. The idle router's user unit `llama-server.service` is enabled for default.target and can be stopped/disabled without deleting its unit, model presets, or model files. Deactivation is pending user execution and post-change verification.
