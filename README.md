@@ -27,6 +27,7 @@
 - [Журнал экспериментов и ошибок](EXPERIMENT_LOG.md).
 - [Архитектурные решения](DECISIONS.md).
 - [Следующее действие](NEXT_ACTION.md).
+- [Протокол восстановления после reboot 2026-11-01](docs/operations/reboot-recovery-2026-11-01/README.md) — полная история подтверждённых фактов, загрязнённого эксперимента, OOM-гипотез, безопасного post-reboot snapshot и отдельного расследования SystemRescue USB.
 
 ### Screenlife — два агента, одна модель
 
@@ -76,8 +77,6 @@
 ### Выбор моделей
 
 - [Протокол benchmark моделей и производительности](docs/model-selection/BENCHMARK-PROTOCOL.md) — повторяемые измерения TTFT, prefill/generation, VRAM/RAM, качества tool calling и корректности задач.
-
-
 - [Кандидаты для обновления модели Hermes + Claude Code](docs/model-selection/2026-10-31-upgrade-candidates.md) — Qwen3.8-27B и ранее использовавшаяся Qwen3.6-35B-A3B; без изменения текущей конфигурации.
 
 ### Аудит домашней папки
@@ -129,7 +128,6 @@
 - [llama.cpp](https://github.com/ggml-org/llama.cpp)
 - [Aider](https://aider.chat/)
 - [Little-coder](https://github.com/itayinbarr/little-coder)
-
 
 ## Актуальная процедура запуска общей Qwen
 
