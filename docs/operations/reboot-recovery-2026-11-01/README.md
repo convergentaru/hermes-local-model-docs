@@ -250,3 +250,16 @@ Claude Code ранее подключался командой `unsloth start cl
 - [DECISIONS.md](../../../DECISIONS.md) — принятые архитектурные решения.
 - [SESSION_BOOTSTRAP.md](../../../SESSION_BOOTSTRAP.md) — краткая точка входа в контекст.
 - [SystemRescue translation/context audit in PC Rescue Platform](https://github.com/convergentaru/pc-rescue-platform/blob/main/docs/SYSTEMRESCUE-TRANSLATION-RECOVERY-AND-CONTEXT-AUDIT-2026-10-31.md) — отдельный аудит перевода и сжатия контекста.
+
+
+---
+
+## User-requested separate post-reboot work orders — 2026-11-01
+
+The next session must also read [POST-REBOOT-WORK-ORDERS.md](POST-REBOOT-WORK-ORDERS.md). It contains:
+- the full copy/paste Hermes prompt to finish the Russian SystemRescue 13.02 documentation translation;
+- the separate Claude Code engineering assignment for the SystemRescue rescue USB, based on the user's observed difference in task performance;
+- the staged Paperclip plan for a one-person AI-operated company;
+- the resource-safe sequential activation rule: one heavy agent task at a time on the current single Unsloth inference slot.
+
+The user has not yet sent the referenced video. Its contents are UNKNOWN until received and reviewed.
