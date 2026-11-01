@@ -567,3 +567,26 @@ All current-runtime acceptance checks passed:
 The full manual sequence now lives in `docs/operations/SHARED-QWEN-STARTUP-RUNBOOK.md`.
 
 No further runtime changes are required now. A cold reboot test is still pending; Unsloth is manually launched through the CLI and no dedicated boot unit is configured. Only pursue systemd auto-start after researching and validating the CLI lifecycle on this installed version.
+
+
+---
+
+## New user priority — separate agent activation and Paperclip pilot (2026-11-01)
+
+This is the latest user instruction and supersedes older plans to run complementary long tasks simultaneously.
+
+### Immediately after reboot
+1. Read `docs/operations/reboot-recovery-2026-11-01/README.md` and `POST-REBOOT-WORK-ORDERS.md`.
+2. Run the read-only post-boot snapshot before starting agents or model servers.
+3. Verify the existing Unsloth/Gateway/Paperclip state; do not assume services are running or configured.
+4. Keep one Unsloth model/server. Do not launch two heavy agent tasks together while the verified baseline has one inference slot.
+
+### Separate agent assignments
+- **Hermes:** execute the saved full prompt to finish the Russian SystemRescue 13.02 documentation translation. First inspect previous outputs and the existing `documentation-translation` skill; do not overwrite originals or claim completion from a partial audit.
+- **Claude Code:** primary engineering agent for the SystemRescue rescue USB/bootability work. User reports Claude Code made materially more progress on the flash-drive task than Hermes; this is user-observed, not a benchmark. Target is the old HP. Begin read-only project recovery and engineering analysis; no ISO build or USB write without explicit permission.
+- **Activation:** start one agent task, save its checkpoint, stop/close that agent cleanly, then start the other. This is separate client/session activation, not permission to start a second model server.
+
+### Paperclip
+After the basic post-boot state is verified, inspect Paperclip installation/version/configuration and adapter support read-only. Then pilot task dispatch, persistence/resume, heartbeat, Stop/cancel and sequential scheduling. The goal is a controlled one-person AI company workflow with the user as owner/approver, Paperclip as dispatcher, Hermes as operations/research/documentation, Claude Code as engineering, and one shared Unsloth/Qwen backend.
+
+Do not enable unattended overnight execution until both adapters are verified against the existing local endpoint and stop/resume/resource limits are tested. The user will send a video about a one-person company; it has not yet been received or reviewed, so do not infer its contents.
