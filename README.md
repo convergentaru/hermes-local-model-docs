@@ -27,6 +27,7 @@
 - [Журнал экспериментов и ошибок](EXPERIMENT_LOG.md).
 - [Архитектурные решения](DECISIONS.md).
 - [Следующее действие](NEXT_ACTION.md).
+- [План подготовки USB, резервного копирования и миграции AI Workstation (2026-11-03)](docs/operations/AI-WORKSTATION-MIGRATION-AND-MODEL-PLAN-2026-11-03.md).
 - [Протокол восстановления после reboot 2026-11-01](docs/operations/reboot-recovery-2026-11-01/README.md) — полная история подтверждённых фактов, загрязнённого эксперимента, OOM-гипотез, безопасного post-reboot snapshot и отдельного расследования SystemRescue USB.
 
 ### Screenlife — два агента, одна модель
