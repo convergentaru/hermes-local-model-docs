@@ -1,3 +1,47 @@
+# CURRENT PRIORITY — 2026-11-03 (supersedes older next-action entries below)
+
+## 1. First: finish the current SystemRescue QEMU test and prepare the physical USB
+
+- The user explicitly set preparation of the working/client SystemRescue USB as **the immediate priority / battle task #1**.
+- The QEMU test is already running; first obtain and review its actual report. Do not restart it or launch another heavy test before the result is known.
+- Then continue the USB task using the existing execution plan and issue in `convergentaru/pc-rescue-platform`.
+- Claude Code is the primary executor; Hermes is the independent checker/auditor.
+- USB writing must use the approved official SystemRescue USB Writer only. If it fails, stop and capture logs; do not switch to `dd` or another writer without explicit user approval.
+- Record successful and failed write attempts, device identity, ISO checksum, writer version, settings, logs and post-write verification.
+- Reconcile the partial Russian translation with actual files before claiming completion.
+
+## 2. After the USB task: backup and prepare OS migration
+
+The user approved planning a reinstall but explicitly said not to begin it now. An external HDD/SSD is available.
+
+- First inventory HOME, projects, models, skills, agent state/config, SSH material, custom builds and user services.
+- Create a manifest, checksums and a verified backup; test restoring selected important files.
+- A full-disk image is optional, not mandatory.
+- Do not format or reinstall until the backup is verified and the user gives a separate go-ahead.
+
+Target architecture is documented in [AI Workstation migration and model plan](docs/operations/AI-WORKSTATION-MIGRATION-AND-MODEL-PLAN-2026-11-03.md):
+- Ubuntu Server 26.04 LTS minimal, no GNOME/KDE.
+- NVIDIA driver + compatible CUDA.
+- One Unsloth-managed inference server and one loaded model shared by Hermes and Claude Code.
+- SSH always available.
+- Xorg + i3 + Polybar + Alacritty installed but **not auto-started**; start/stop graphical session on demand.
+- Claude Code is the primary executor; Hermes is dispatcher/checker.
+- Day/night/test windows with resource-aware sequential scheduling.
+
+## 3. Later: Colibri and larger-model evaluation
+
+- Revisit the exact Colibri project from the 2026-11-02 discussion; verify its real name, upstream repository and purpose before installation.
+- If justified, install without autostart and only run after compatibility/resource checks.
+- Investigate code-quality-first models around 14B–20B; do not assume 27B is required.
+- Preserve the known Qwen3.5-9B baseline. Benchmark one candidate at a time for code quality, tool calls, context stability, RAM/VRAM, latency and throughput.
+- The user explicitly prefers slower, methodical, higher-quality coding over speed.
+
+## 4. Agent dashboard research — after the base stack is stable
+
+Evaluate Hermes Studio first, then Paperclip if needed; investigate Xiaomi MiMo / SoloEngine separately. Do not install multiple orchestrators at once.
+
+---
+
 # NEXT_ACTION — один следующий шаг
 
 Дата: 2026-10-31
