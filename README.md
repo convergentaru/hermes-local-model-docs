@@ -136,3 +136,13 @@
 - [Текущее состояние](CURRENT_STATE.md)
 - [Следующее действие](NEXT_ACTION.md)
 - [Журнал экспериментов](EXPERIMENT_LOG.md)
+
+
+### ChatGPT Bridge
+
+- [Проект ChatGPT Bridge: AI Free + ChatGPT + Cloudflare + Hermes](docs/integrations/chatgpt-bridge/README.md)
+- [Дорожная карта](docs/integrations/chatgpt-bridge/ROADMAP.md)
+- [Исследование](docs/integrations/chatgpt-bridge/RESEARCH.md)
+- [Архитектура](docs/integrations/chatgpt-bridge/ARCHITECTURE.md)
+- [Журнал экспериментов](docs/integrations/chatgpt-bridge/EXPERIMENT_LOG.md)
+- [Журнал решений](docs/integrations/chatgpt-bridge/DECISIONS.md)
