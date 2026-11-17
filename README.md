@@ -88,6 +88,7 @@
 
 ### Интеграции
 
+- [Paperclip + Hermes Local: подключение, выжимка статьи и состояние нашей установки](docs/integrations/paperclip-hermes-local.md).
 - [Hermes ↔ Claude Code: варианты интеграции и решение](docs/integrations/hermes-claude-code.md) — исследование и решение пока не настраивать MCP.
 
 ### Кодовые агенты
